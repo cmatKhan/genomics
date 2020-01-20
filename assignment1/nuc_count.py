@@ -64,10 +64,6 @@ for nuc in ["A", "T", "G", "C"]:
     nuc_freq = nuc_dict[nuc]/chr20_total
     print("\n The frequency of {} is {}".format(nuc, nuc_freq))
 
-## Part 4
-
-
-
 ## Part 5
 
 # create dictionary to store key, value pairs {dinucleotide: total}
