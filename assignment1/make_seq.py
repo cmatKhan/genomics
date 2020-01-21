@@ -17,17 +17,26 @@ import random
 
 ## Part 4: random nucleotide sequence
 
+def noFloats(a_float):
+	# this is a very bad method of addressing an issue I had comparing floats. If this remains, I did not figure out a better method
+	# Args: a floating point number
+	# returns: an int scaled up and rounded
+
+	multiplier = 10000000
+	not_a_float = int(round(a_float * multiplier, 1))
+	return not_a_float
+
 def getRandom(freq1, freq2):
 	# generate a float btwn 0.0 and 1.0
 	# Args: none
 	# Return: a floating point number btwn 0.0 and 1.0
 
-	# generate random
-	random_dec = random.random()
-	# do it again if the number is equal to either AT or GC total
-	if random_dec == freq1 or random_dec == freq2:
-		random_dec = getRandom(freq1, freq2)
-	return random_dec
+	output_random = random.random()
+	output_as_rounded_int = noFloats(output_random)
+
+	if output_as_rounded_int == noFloats(freq1) or output_as_rounded_int == noFloats(freq2):
+		output_random = getRandom(freq1, freq2)
+	return output_random
 
 def chooseSides(wallflower, two_sets):
 	# Choose a side based on which set a number belongs
@@ -36,23 +45,26 @@ def chooseSides(wallflower, two_sets):
 	# Return: A key of the dictionary two_sets representing the set to which the wallflower belongs
 	# Constraint: there is a silly solution to comparing floats. couldn't think of anything better...need to look
 
-	# python can't compare floats. turn the float into a big int and then run chooseSides
-	wallflower_place = 'NN'
-	if isinstance(wallflower, float):
-		multiplier = 10000000
-		wallflower = int(round((wallflower * multiplier), 7))
-		for key, value in two_sets.items():
-			two_sets[key] = round(value * multiplier, 7)
-		wallflower_place = chooseSides(wallflower, two_sets)
-	else:
-		# iterate through the sets
-		for key, value in two_sets.items():
-			if wallflower < value:
-				wallflower_place = key
+	temp_dict = {}
+	for key, value in two_sets.items():
+		temp_dict[key] = noFloats(value)
 
-	return wallflower_place
 
-def createRandomSequence(sequence_len, a_freq, t_freq, g_freq, c_freq):
+	dance_partner = ''
+	smallest_key = min(temp_dict)
+	largest_key = max(temp_dict)
+	wallflower = noFloats(wallflower)
+
+	for key, value in temp_dict.items():
+		if wallflower <= value and key == smallest_key:
+			dance_partner = key
+		elif wallflower >= value and key == largest_key:
+			dance_partner = key
+
+	return dance_partner
+
+
+def createRandomSequence(a_freq, t_freq, g_freq, c_freq):
 	# Initialize an empty string that nucleotides can be appended to
 	random_nucleotide_seq = ''
 
@@ -70,6 +82,7 @@ def createRandomSequence(sequence_len, a_freq, t_freq, g_freq, c_freq):
 		ran = getRandom(AT_freq, GC_freq)
 
 		# based on relative frequencies of AT and GC, determine if my_ran is a AT or GC
+		# error handling here -- if return nn wrong
 		bp = chooseSides(ran, bp_freq_dict)
 
 		# generate another random number
@@ -86,7 +99,7 @@ def createRandomSequence(sequence_len, a_freq, t_freq, g_freq, c_freq):
 
 	return random_nucleotide_seq
 
-sequence_length = 100
+sequence_length = 1000
 a_freq = 0.28
 c_freq = 0.28
 g_freq = 0.21
@@ -112,7 +125,7 @@ def main(sequence_length, a_freq, t_freq, g_freq, c_freq):
 	#g_freq = float(sys.argv[4])
 	#t_freq = float(sys.argv[5])
 
-	random_sequence = createRandomSequence(sequence_length, a_freq, t_freq, g_freq, c_freq)
+	random_sequence = createRandomSequence(a_freq, t_freq, g_freq, c_freq)
 	print(random_sequence)
 
 main(sequence_length, a_freq, t_freq, g_freq, c_freq)
