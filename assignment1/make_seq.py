@@ -111,7 +111,7 @@ def chooseSides(wallflower, two_sets):
 	# Return: A key of the dictionary two_sets representing the set to which the wallflower belongs
 	# Constraint: there is a silly solution to comparing floats. couldn't think of anything better...need to look
 
-	convert the floats to ints
+	#convert the floats to ints
 	temp_dict = {}
 	for key, value in two_sets.items():
 		temp_dict[key] = noFloats(value)
