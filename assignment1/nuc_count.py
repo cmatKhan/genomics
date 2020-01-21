@@ -3,7 +3,7 @@
 """ 
 nuc_count.py counts nucleotides in a fasta file
 
-Usage: python3 nuc_count.py <fasta>
+Usage: nuc_count.py <fasta>
 
 <fasta> = path to a fasta file
 """ 
@@ -11,7 +11,12 @@ Usage: python3 nuc_count.py <fasta>
 # Import modules
 import sys
 
-def main(fastq):
+def main(argv):
+    # main method
+    # Args: one cmd line input of a fastq file with a single entry
+    # Output: Parts 2, 3 and 5
+
+    fasta = sys.argv[1]
     # get nucleotide sequence from fastq with one chromosome, all upper case. Print nuc frequencies and sequence length
     # return dictionary with sequence and nuc counts
     seq_dict = getSeq(fasta)
@@ -29,6 +34,10 @@ def main(fastq):
 #fasta = sys.argv[1]
 
 def getSeq(fasta):
+    # read in sequence
+    # Args: a fasta with one chr(cmd line input)
+    # Return: a dictionary of the sequence and nuc counts
+    # Output: Prints raw counts and sequence length
 
     # Initialize a nucleotide string
     nucleotides = ""
@@ -62,12 +71,16 @@ def getSeq(fasta):
     print("N: ", num_n)
     print("Sequence length: {}" .format(len(nucleotides)))
 
+    # create dictionary to store sequence and raw counts
     seq_dict = {'seq': nucleotides, 'A': num_a, 'T': num_t, 'G': num_g, 'C': num_c, 'N': num_n}
     return seq_dict
 
 ## Part 3
-
 def printNucFreq(seq_dict):
+    # print nucleotide frequencies (not N)
+    # Args: seq_dict with keys seq, A, T, G, C, N
+    # Return: None
+    # Output: print relative frequencies of nucleotides
 
     chr20_total = len(seq_dict['seq'])
 
@@ -75,9 +88,14 @@ def printNucFreq(seq_dict):
     for nuc in ["A", "T", "G", "C"]:
         nuc_freq = seq_dict[nuc]/chr20_total
         print("\n The frequency of {} is {}".format(nuc, nuc_freq))
+    print("\n")
 
 ## Part 5
 def printDinucFreq(seq_dict):
+    # calculate dinucleotide frequencies
+    # Args: seq_dict with keys seq, A, T, G, C, N
+    # Return: None
+    # Output: prints dinucleotide frequencies
 
     seq = seq_dict['seq']
     seq_length = len(seq)
@@ -110,5 +128,6 @@ def printDinucFreq(seq_dict):
         dinuc_freq = value/total_dinuc
         print("The frequency of dinucleotide sequence {} in chromosome 20 is {}". format(key, dinuc_freq))
 
-
-main(sys.argv)
+# run main method
+if __name__ == '__main__':
+	main(sys.argv)

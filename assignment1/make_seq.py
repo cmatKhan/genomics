@@ -16,55 +16,37 @@ import sys
 import random
 
 ## Part 4: random nucleotide sequence
+def main(argv):
+	# main method
 
-def noFloats(a_float):
-	# this is a very bad method of addressing an issue I had comparing floats. If this remains, I did not figure out a better method
-	# Args: a floating point number
-	# returns: an int scaled up and rounded
+	# Save the input arguments as variables
+	# By default, the command line arguments are saved as strings. Convert them to numeric types.
+	sequence_length = int(sys.argv[1])
+	a_freq = float(argv[2])
+	c_freq = float(argv[3])
+	g_freq = float(argv[4])
+	t_freq = float(argv[5])
 
-	multiplier = 10000000
-	not_a_float = int(round(a_float * multiplier, 1))
-	return not_a_float
+	# sys.arg is a list containing 6 elements: the script name and 5 command line arguments
+	# Check that all 5 command line arguments were given. If not, print the documentation and exit.
+	if (len(sys.argv) != 6):
+		sys.exit("ERROR: incorrect number of arguments.\n" + __doc__)
 
-def getRandom(freq1, freq2):
-	# generate a float btwn 0.0 and 1.0
-	# Args: none
-	# Return: a floating point number btwn 0.0 and 1.0
+	# Check that frequencies add to 1. If not, exit the program
+	if (abs(a_freq + t_freq + c_freq + g_freq - 1) > 1e-4):
+		sys.exit("ERROR: Nucleotide frequencies do not add up to 1!")
 
-	output_random = random.random()
-	output_as_rounded_int = noFloats(output_random)
+	random_sequence = createRandomSequence(sequence_length, a_freq, t_freq, g_freq, c_freq)
+	print(random_sequence)
+	with open('./random_sequence.fa', 'w') as f:
+		f.write(random_sequence)
 
-	if output_as_rounded_int == noFloats(freq1) or output_as_rounded_int == noFloats(freq2):
-		output_random = getRandom(freq1, freq2)
-	return output_random
+def createRandomSequence(sequence_length, a_freq, t_freq, g_freq, c_freq):
+	# Generate a random sequence. This just hides the mess so that the main method looks prettier
+	# Args: frequencies of each nucleotides
+	# Return: a fasta in the same format as the nuc_count input
+	# Output: prints sequence
 
-def chooseSides(wallflower, two_sets):
-	# Choose a side based on which set a number belongs
-	# Args: A value that doesn't know where it belongs
-	# 		A dictionary with two key/values. These are the two possible sets that the wallflower may belong to
-	# Return: A key of the dictionary two_sets representing the set to which the wallflower belongs
-	# Constraint: there is a silly solution to comparing floats. couldn't think of anything better...need to look
-
-	temp_dict = {}
-	for key, value in two_sets.items():
-		temp_dict[key] = noFloats(value)
-
-
-	dance_partner = ''
-	smallest_key = min(temp_dict)
-	largest_key = max(temp_dict)
-	wallflower = noFloats(wallflower)
-
-	for key, value in temp_dict.items():
-		if wallflower <= value and key == smallest_key:
-			dance_partner = key
-		elif wallflower >= value and key == largest_key:
-			dance_partner = key
-
-	return dance_partner
-
-
-def createRandomSequence(a_freq, t_freq, g_freq, c_freq):
 	# Initialize an empty string that nucleotides can be appended to
 	random_nucleotide_seq = ''
 
@@ -94,38 +76,65 @@ def createRandomSequence(a_freq, t_freq, g_freq, c_freq):
 			nuc = chooseSides(another_ran, GC_freq_dict)
 
 		# an array would be better. need numpy. not sure how else to append string in python (note to self to look)
-		print(random_nucleotide_seq + ' and the next is... ' + nuc)
 		random_nucleotide_seq = random_nucleotide_seq + nuc
+		if len(random_nucleotide_seq) % 100 == 0:
+			random_nucleotide_seq = random_nucleotide_seq + '\n'
 
+	random_nucleotide_seq = '>random_sequence\n' + random_nucleotide_seq
 	return random_nucleotide_seq
 
-sequence_length = 1000
-a_freq = 0.28
-c_freq = 0.28
-g_freq = 0.21
-t_freq = 0.23
+def noFloats(a_float):
+	# this is a very bad method of addressing an issue I had comparing floats. If this remains, I did not figure out a better method
+	# Args: a floating point number
+	# returns: an int scaled up and rounded
 
-# Check that frequencies add to 1. If not, exit the program
-if (abs(a_freq + t_freq + c_freq + g_freq - 1) > 1e-4):
-	sys.exit("ERROR: Nucleotide frequencies do not add up to 1!")
+	multiplier = 10000000
+	not_a_float = int(round(a_float * multiplier, 1))
+	return not_a_float
 
-def main(sequence_length, a_freq, t_freq, g_freq, c_freq):
-	#TODO: add error catching on chooseSides NN
+def getRandom(freq1, freq2):
+	# generate a float btwn 0.0 and 1.0
+	# Args: none
+	# Return: a floating point number btwn 0.0 and 1.0
 
-	# sys.arg is a list containing 6 elements: the script name and 5 command line arguments
-	# Check that all 5 command line arguments were given. If not, print the documentation and exit.
-	#if (len(sys.argv) != 6):
-	#	sys.exit("ERROR: incorrect number of arguments.\n" + __doc__)
+	output_random = random.random()
+	output_as_rounded_int = noFloats(output_random)
 
-	# Save the input arguments as variables
-	# By default, the command line arguments are saved as strings. Convert them to numeric types.
-	# sequence_length = int(sys.argv[1])
-	#a_freq = float(sys.argv[2])
-	#c_freq = float(sys.argv[3])
-	#g_freq = float(sys.argv[4])
-	#t_freq = float(sys.argv[5])
+	if output_as_rounded_int == noFloats(freq1) or output_as_rounded_int == noFloats(freq2):
+		output_random = getRandom(freq1, freq2)
+	return output_random
 
-	random_sequence = createRandomSequence(a_freq, t_freq, g_freq, c_freq)
-	print(random_sequence)
+def chooseSides(wallflower, two_sets):
+	# Choose a side based on which set a number belongs
+	# Args: A value that doesn't know where it belongs
+	# 		A dictionary with two key/values. These are the two possible sets that the wallflower may belong to
+	# Return: A key of the dictionary two_sets representing the set to which the wallflower belongs
+	# Constraint: there is a silly solution to comparing floats. couldn't think of anything better...need to look
 
-main(sequence_length, a_freq, t_freq, g_freq, c_freq)
+	convert the floats to ints
+	temp_dict = {}
+	for key, value in two_sets.items():
+		temp_dict[key] = noFloats(value)
+
+	# figure out where the wallflower belongs
+	dance_partner = ''
+	smallest_key = min(temp_dict)
+	largest_key = max(temp_dict)
+	wallflower = noFloats(wallflower)
+	for key, value in temp_dict.items():
+		if wallflower <= value and key == smallest_key:
+			dance_partner = key
+		elif wallflower >= value and key == largest_key:
+			dance_partner = key
+
+	return dance_partner
+
+
+if __name__ == '__main__':
+	main(sys.argv)
+
+# sequence_length = 1000
+# a_freq = 0.28
+# c_freq = 0.28
+# g_freq = 0.21
+# t_freq = 0.23
