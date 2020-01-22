@@ -41,16 +41,15 @@ def main(argv):
 	# generate the random sequence
 	random_sequence = createRandomSequence(sequence_length, a_freq, t_freq, g_freq, c_freq)
 	# print the random sequence
-	print(random_sequence)
+	print("\nWriting sequence to ./random_seq_1M.txt" + random_sequence[0:60] + "...")
 	# write the random sequence to the directory where the script was called in the same format as chr20.fa for nuc_counts.py
 	with open('./random_seq_1M.txt', 'w') as f:
 		f.write(random_sequence)
 
 def createRandomSequence(sequence_length, a_freq, t_freq, g_freq, c_freq):
 	# Generate a random sequence. This just hides the mess so that the main method looks prettier
-	# Args: frequencies of each nucleotides
-	# Return: a fasta in the same format as the nuc_count input
-	# Output: prints sequence
+	# Args: frequencies of each nucleotides. note the order
+	# Return: a fasta-styled string in the same format as the nuc_count input
 
 	# Initialize an empty string that nucleotides can be appended to
 	random_nucleotide_seq = ''
