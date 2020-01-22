@@ -2,6 +2,8 @@
 
 """make_seq.py prints a random sequence given a sequence length and nucleotide frequencies.  The random sequence will have the same nucleotide frequencies as the input nucleotide frequencies.
 
+*** This also writes out the sequence in the same format as the input to nuc_count.py to make it easier to check the frequencies
+
 Usage: python3 make_seq.py <sequence_length> <a_freq> <c_freq> <g_freq> <t_freq>
 
 <sequence_length> = Length of sequence to generate
@@ -36,9 +38,12 @@ def main(argv):
 	if (abs(a_freq + t_freq + c_freq + g_freq - 1) > 1e-4):
 		sys.exit("ERROR: Nucleotide frequencies do not add up to 1!")
 
+	# generate the random sequence
 	random_sequence = createRandomSequence(sequence_length, a_freq, t_freq, g_freq, c_freq)
+	# print the random sequence
 	print(random_sequence)
-	with open('./random_sequence.fa', 'w') as f:
+	# write the random sequence to the directory where the script was called in the same format as chr20.fa for nuc_counts.py
+	with open('./random_seq_1M.txt', 'w') as f:
 		f.write(random_sequence)
 
 def createRandomSequence(sequence_length, a_freq, t_freq, g_freq, c_freq):
