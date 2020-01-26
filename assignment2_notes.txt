@@ -1,0 +1,3 @@
+build hash table of 25-mer 0-25, 1-26, i-i+25, i+1 - 25+i+1 (key) to gene (value)
+
+search key for match, spit out gene (value)

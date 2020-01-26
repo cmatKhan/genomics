@@ -41,7 +41,7 @@ def main(argv):
 	# generate the random sequence
 	random_sequence = createRandomSequence(sequence_length, a_freq, t_freq, g_freq, c_freq)
 	# print the random sequence
-	print("\nWriting sequence to ./random_seq_1M.txt" + random_sequence[0:60] + "...")
+	print("\nWriting sequence to ./random_seq_1M.txt\n" + random_sequence[0:60] + "...")
 	# write the random sequence to the directory where the script was called in the same format as chr20.fa for nuc_counts.py
 	with open('./random_seq_1M.txt', 'w') as f:
 		f.write(random_sequence)
