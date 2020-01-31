@@ -18,7 +18,7 @@ Cd34	7	0.006092254134029591
 ChAT	0	0.0
 Gap43	36	0.05263157894736842
 Gfap	37	0.028615622583139984
-Mbp	    304	0.4037184594953519
+Mbp	304	0.4037184594953519
 Myod1	0	0.0
 Olig2	6	0.006172839506172839
 Tubb3	153	0.1130820399113082
@@ -32,8 +32,6 @@ p-val for this distribution is 7.150904021083785e-06
 -- It is entirely possible that I am missing some critical information. However, without information about
 the experimental conditions and a control, it is hard (for me at least -- I am not familiar with these
 genes) to know if these numbers are outside of the range of what we'd expect.
-
- -- whatever they did reflects a cell type difference or experimental difference. This suggests...
 
 {Question 1.2 Genes highly expressed, their function, and why?} -- hard to tell w/out control
 
@@ -75,7 +73,7 @@ Question 2:
     p = .0000071509, which passes our typical p < .05 to conclude that this result is statistically significant
 
 {one-tailed or two-tailed}
-    two tailed. The brain specific genes may be both over or under enriched.
+    two tailed. The brain specific genes may be either over or under enriched.
 
 {Show Me the, ehh, Calculation}
     (20 -C- 10)(3/30)^10(1-(3/30)^10 -- 20 choose 10, times the probability of a gene being annotated for brain function,
