@@ -16,7 +16,7 @@ Cd34	7	0.006092254134029591
 ChAT	0	0.0
 Gap43	36	0.05263157894736842
 Gfap	37	0.028615622583139984
-Mbp	304	0.4037184594953519
+Mbp	    304	0.4037184594953519
 Myod1	0	0.0
 Olig2	6	0.006172839506172839
 Tubb3	153	0.1130820399113082
@@ -27,18 +27,35 @@ Tubb3	153	0.1130820399113082
 The probability that 10 of 20 highly enriched genes is a gene of brain function is 6.442043387911576e-06
 p-val for this distribution is 7.150904021083785e-06
 
+-- It is entirely possible that I am missing some critical information. However, without information about
+the experimental conditions and a control, it is hard (for me at least -- I am not familiar with these
+genes) to know if these numbers are outside of the range of what we'd expect.
+
+ -- whatever they did reflects a cell type difference or experimental difference. This suggests...
+
 {Question 1.2 Genes highly expressed, their function, and why?} -- hard to tell w/out control
+
 Atp1A1 -- membrane protein. Na+K+ atpase pump. Associated with Charcot-Marie-tooth disease (axon degeneration disease)
 Mbp    -- Involved in myelination of the nerves
 Tubb3  -- highly enriched in neuronal cells. Microtubual binding protein
 
+ -- This is a brain sample, and these are brain/neuron associated proteins. Presumably these are results from a single
+ experimental group, which would lead me to believe that there was some sort of perturbation causing these genes to act unusually.
+ If we assume that these are (significantly) highly expressed, then the neurons are expressing a protein pump in an unusual way.
+ This is implicated in Charcot-Marie-Tooth disease, so possibly this is a marker of axon degeneration. I would be curious to know
+ if the experimenters noted any coordination issues in their mice. Highly expressed Mbp seems to indicate increase myelination, another
+ phenotypic observation that may be possible in these cells. Tubb3 may be overexpressing some structural components (although the
+ information I found on Tubb3 says it is highly enriched in neuronal cells, so this may be a normal expression level).
+
 {Question 1.3 Genes lowly or not expressed, their function, and why?}
+ABCG2 -- extra and intracellular membrane transport. Implicated as a breast cancer resistance protein.
 Cd34  -- transmembrane phospho-glyco protein. Expressed on blood vessels
-ChAT  -- located at the ends of nerve cells. facilitates a production of a neurotransmitter
-Gap43 -- neuronal protein. Associated with axonal growth cone
 Gfap  -- cytoskeletal protein
 Myod1 -- muscle differentiation
 Olig2 -- expressed in CNS. Also involved in motor neuron differentiation. Also oligodendrocyte differentiation
+
+ -- These seem to have to do with transport and cell differentiation. It may indicate the stage of cell development,
+ though it is also possible that the cells are diverting resources to other more critical needs.
 
 Question 2:
 {Yes or No} -- I'm not sure what this refers to
@@ -83,4 +100,4 @@ Comments:
 Re-phrase the question on highly/lowly expressed genes to something like, "Choose 8 genes and describe their function".
  -
 Suggestions:
-More math! The quantitative portion of the lectures/lab-lectures has been pretty light so far (I did write this prior to Ting Wang's lectures. But, I am looking forward to more focus on the statistics in the labs).
+More math!
