@@ -10,6 +10,8 @@ Arguments:
 """
 
 import sys
+import scipy.stats
+
 
 def reverse_complement(sequence):
     # This function returns the reverse complement of a sequence
@@ -47,7 +49,7 @@ def read_cDNA_file_to_dict(filename):
         for line in cDNA_file:
             # add gene/sequence(upper case) to dictionary. Strip whitespace from both
             if line.startswith('>'):
-                gene_name = line[1:].rstrip()
+                gene_name = line[1:].rstrip().split('|')[1]
                 seq = next(cDNA_file).rstrip().upper()
                 cDNA_dict.setdefault(gene_name, seq)
 
@@ -124,6 +126,13 @@ def main(args):
     print("Name\tReads\tReads per BP")
     for name, count in sorted(count_dict.items()):
         print(name + "\t" + str(count) + "\t" + str(float(count)/len(cDNA_dict[name])))
+
+    # calculation for lab questions
+    prob_brain_enrich = scipy.stats.binom.pmf(10,20,.1)
+    p_val = scipy.stats.binom_test(10,20,.1)
+    print('\nThe probability that 10 of 20 highly enriched genes is a gene of brain function is {} \np-val for this distribution is {}'.format(prob_brain_enrich, p_val))
+
+
 
 # main function call
 if __name__ == "__main__":
