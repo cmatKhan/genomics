@@ -130,6 +130,7 @@ def main(args):
     # calculation for lab questions
     prob_brain_enrich = scipy.stats.binom.pmf(10,20,.1)
     p_val = scipy.stats.binom_test(10,20,.1)
+    print('############ question 2 numbers ##################')
     print('\nThe probability that 10 of 20 highly enriched genes is a gene of brain function is {} \np-val for this distribution is {}'.format(prob_brain_enrich, p_val))
 
 
