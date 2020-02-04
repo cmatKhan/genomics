@@ -1,0 +1,27 @@
+download sequence from yeast genome site
+
+use blast per instructions, changing score
+
+change algorithm parameters
+
+max target sequence to 250
+
+after blast, align reads with bowtie
+
+create index for chr22 (provided in assignment 3, symlink)
+
+bowtie2-build to build index
+
+bowtie2 will give options, etc -- pay attention to the options
+
+reads we will be aligning are in reads.fq (in assignment3 dir)
+
+these are UNPAIRED reads
+
+save both alignment output and report
+
+compare nuc and dinuc. Don't need to edit nuc_count_FINAL, just run it.
+
+EC
+
+ID species and turn in output from running blast
