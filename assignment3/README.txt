@@ -59,7 +59,7 @@ Question 10:
 Part 2:
 Question 11
 {Your command with specific file names}
-bowtie2 -x chr22_idx/chr22_idx -U reads.fq -S yeast_end_end.sam 2> end-end_report.txt # run from assignment3/work
+bowtie2 -x chr22_idx/chr22_idx -U reads.fq -S reads_chr22.sam 2> alignment_report.txt
 
 {Number of uniquely mapped reads}
     7115 (26.69%) aligned exactly 1 time
