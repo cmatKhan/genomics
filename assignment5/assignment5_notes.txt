@@ -1,0 +1,17 @@
+4 diff scripts
+
+start with py3 shebang
+
+all scripts need docstring
+
+check num args (do this with parse.args)
+
+bed first three col chromo start pos stop pos. tab delim (make sure they stay tab when write out)
+
+
+bedtools is on server
+
+defn: promoter. find defn that says promotor some num up/down stream
+   justify how many bases you consider as overlap
+
+
