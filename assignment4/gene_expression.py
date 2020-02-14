@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-if not len(sys.argv[0:]) == 2:
-    sys.exit("Please input raw_counts.txt to the script.")
+#if not len(sys.argv[0:]) == 2:
+#    sys.exit("Please input raw_counts.txt to the script.")
 
 
 #######################
@@ -51,7 +51,7 @@ def library_sizes(dictionary, list_of_samples):
         # Append a new float zero value for each sample (goes to index i)
         N.append(0.0)
         # For loop to iterate over each value in our dictionary
-        for v in dictionary.values():0d3a0a89075f1b5b3f0fd4cd75eb9819cc4872ce
+        for v in dictionary.values():
             # Get the count from the i index of this gene and add it to the total for sample i
             N[i] += v[i]
     # Return the list containing each sample's library size
@@ -147,41 +147,47 @@ def createFLDTable(norm_fltr_dict, print_full = False):
     # Args: a normalized dictionary filtered by genes with zero count across samples and cpm < 1 in 20+ samples. NOTE: norm_fltr_dict must be in RAW COUNTS
     # Returns: a dataframe of gene by FLD
 
+    # create list of sorted gene names
     gene_list = sorted(norm_fltr_dict.keys())
+    # translate norm dict to gene / sample
     trans_dict = translate_dictionary(norm_fltr_dict, sample_list)
+
+    # create column headers
     col_order = ["gene"]
     col_order.extend(list(trans_dict.keys()))
     sum_cols = ["Before_mean", "Before_sd", "After_mean", "After_sd"]
     col_order.extend(sum_cols)
 
-    gene_by_sample_mtrx = np.array([trans_dict[i] for i in sample_list]).transpose()
-    gene_by_sample_df = pd.DataFrame(gene_by_sample_mtrx, columns=sample_list)
+    # shape dataframe
+    gene_by_sample_df = pd.DataFrame(trans_dict)
     gene_by_sample_df['gene'] = gene_list
     gene_by_sample_df = appendSummaryColumns(gene_by_sample_df, 'Before_mean', 'Before_1', 'Before_20', 'mean')
     gene_by_sample_df = appendSummaryColumns(gene_by_sample_df, 'After_mean', 'After_1', 'After_20', 'mean')
     gene_by_sample_df = appendSummaryColumns(gene_by_sample_df, 'Before_sd', 'Before_1', 'Before_20', 'sd')
     gene_by_sample_df = appendSummaryColumns(gene_by_sample_df, 'After_sd', 'After_1', 'After_20', 'sd')
     gene_by_sample_df = gene_by_sample_df[col_order]
-    gene_by_sample_df.set_index('gene')
-    if print_full:
+
+    # flag to print full dataframe with mean/sd info
+    if print_full == True:
+        gene_by_sample_df = gene_by_sample_df.set_index('gene')
         return gene_by_sample_df
 
+    # otherwise, calculate fld and return top 10
     fld_df = gene_by_sample_df.apply(lambda row: fldFormula(row.Before_mean, row.Before_sd, row.After_mean, row.After_sd), axis=1)
-
     gene_by_sample_df['fld'] = fld_df
-
     gene_by_fld = pd.concat([gene_by_sample_df['gene'], fld_df], axis=1)
     gene_by_fld.columns = ["gene", "fld"]
+    gene_by_fld = gene_by_fld.set_index('gene')
 
-    return gene_by_fld.sort_values(by=['fld'], ascending=False).iloc[:10,:]
+    return gene_by_fld.sort_values(by=['fld'], ascending=False).head(10)
 
 ####################
 ##End of functions##
 ####################
-
+data_file = open("./raw_counts.txt")
 
 # open the data file
-data_file = open(sys.argv[1],"r")
+#data_file = open(sys.argv[1],"r")
 # first line of data file contains sample names -- store in a list
 sample_list = data_file.readline().strip().split()[1:]
 # initialize raw count dictionary
@@ -266,6 +272,10 @@ with open('./filtered_lib_size.txt', 'w') as f:
     for item in filtered_lib_sizes:
         f.write("%s\n" % item)
 
+with open('./sample_list.txt', 'w') as f:
+    for item in sample_list:
+        f.write("%s\n" % item)
+
 
 ################################
 ##Part 3 -- Data normalization##
@@ -273,8 +283,9 @@ with open('./filtered_lib_size.txt', 'w') as f:
 
 # Normalize count data left after filtering steps
 norm_fltr_dict = upper_quartile_norm(fltr_cpm_dict, sample_list)
+norm_lib_size = library_sizes(norm_fltr_dict, sample_list)
 with open('./norm_lib_size.txt', 'w') as f:
-    for item in norm_fltr_dict:
+    for item in norm_lib_size:
         f.write("%s\n" % item)
 
 
@@ -297,10 +308,3 @@ norm_mean_df = createFLDTable(norm_fltr_dict, print_full=True)
 gene_of_interest_df = norm_mean_df.loc['RAB30',:]
 gene_of_interest_df.to_csv('./RAB30_exp.csv')
 
-######################################
-##Extra credit -- Going the distance##
-######################################
-
-# Calculate Euclidean distance matrix of samples, output the most/least related samples
-
-# Plot a dendrogram using Euclidean distance (save file as dendrogram.png)
