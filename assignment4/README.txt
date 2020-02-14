@@ -2,7 +2,20 @@ Assignment 4 Due February 14, 2020 at 10am
 
 Please provide the exact command line arguments you used to generate your results.
 {How to run gene_expression.py}
--
+./gene_expression.py raw_counts.txt
+
+****PLEASE NOTE****
+I work on these scripts on my local machine, which has python3 installed. Python2.7.17 is installed on the class server, however.
+Surprisingly, this hasn't been an issue yet and I hadn't noticed, but it causes problems is in this case.
+The script will run, but the output of the FLD function is quite different. My guess is it has
+something to do with the floating point arithmetic. But, I didn't notice until Friday morning.
+
+I would normally run a virtual environment to get around this sort of issue, but I hope that an otherwise working script
+(there is output, it is just the wrong numbers) and a screenshot of the python3 output is enough proof that a virtual
+environment would solve the issue. Please see the image "screenshot" for the python3 output.
+
+Please see the R script to see the code I used to generate my graphs.
+
 Question 1:
 {How many genes are left after removing genes with zero expression in all samples?}
 - 23259
@@ -30,7 +43,6 @@ Question 5:
 Question 6:
 {What are the top ten differentially expressed genes according to your FLD analysis? (Copy and paste your function's output.)}
 - The top 10 differentially expressed genes by FLD are:
-
            gene       fld
         AK000953    1.018488
         RAB30       0.988243
@@ -42,6 +54,7 @@ Question 6:
         ABCG1       0.746580
         FNDC5       0.739654
         BC010186    0.737283
+
 {Do these genes make sense given the tissue and groups in the experiment?}
 - RAB30 -- increases in diabetic mice (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3516129/)
 - DBNDD1 -- implicated in a glycogen storage disease, also upregulated in the muscles of diabetic rats (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3931395/)
