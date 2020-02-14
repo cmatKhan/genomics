@@ -51,7 +51,7 @@ def library_sizes(dictionary, list_of_samples):
         # Append a new float zero value for each sample (goes to index i)
         N.append(0.0)
         # For loop to iterate over each value in our dictionary
-        for v in dictionary.values():
+        for v in dictionary.values():0d3a0a89075f1b5b3f0fd4cd75eb9819cc4872ce
             # Get the count from the i index of this gene and add it to the total for sample i
             N[i] += v[i]
     # Return the list containing each sample's library size
@@ -263,7 +263,7 @@ print("\nThe minimum range of a gene by raw count is {}\nThe maximum range of a 
 filtered_lib_sizes = library_sizes(fltr_cpm_dict,sample_list)
 # write out list to plot with R
 with open('./filtered_lib_size.txt', 'w') as f:
-    for item in my_list:
+    for item in filtered_lib_sizes:
         f.write("%s\n" % item)
 
 
@@ -274,7 +274,7 @@ with open('./filtered_lib_size.txt', 'w') as f:
 # Normalize count data left after filtering steps
 norm_fltr_dict = upper_quartile_norm(fltr_cpm_dict, sample_list)
 with open('./norm_lib_size.txt', 'w') as f:
-    for item in my_list:
+    for item in norm_fltr_dict:
         f.write("%s\n" % item)
 
 
