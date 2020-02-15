@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 TODO: Write a summary of what this script does. 
 Usage: python3 gene_expression.py raw_counts.txt
@@ -268,13 +267,13 @@ print("\nThe minimum range of a gene by raw count is {}\nThe maximum range of a 
 # See R code. Plot called: library_size.png
 filtered_lib_sizes = library_sizes(fltr_cpm_dict,sample_list)
 # write out list to plot with R
-with open('./filtered_lib_size.txt', 'w') as f:
-    for item in filtered_lib_sizes:
-        f.write("%s\n" % item)
+#with open('./filtered_lib_size.txt', 'w') as f:
+#    for item in filtered_lib_sizes:
+#        f.write("%s\n" % item)
 
-with open('./sample_list.txt', 'w') as f:
-    for item in sample_list:
-        f.write("%s\n" % item)
+#with open('./sample_list.txt', 'w') as f:
+#    for item in sample_list:
+#        f.write("%s\n" % item)
 
 
 ################################
@@ -284,9 +283,9 @@ with open('./sample_list.txt', 'w') as f:
 # Normalize count data left after filtering steps
 norm_fltr_dict = upper_quartile_norm(fltr_cpm_dict, sample_list)
 norm_lib_size = library_sizes(norm_fltr_dict, sample_list)
-with open('./norm_lib_size.txt', 'w') as f:
-    for item in norm_lib_size:
-        f.write("%s\n" % item)
+#with open('./norm_lib_size.txt', 'w') as f:
+#    for item in norm_lib_size:
+#        f.write("%s\n" % item)
 
 
 # See R script. Plot called: library_size_normalzied.png)
@@ -306,5 +305,5 @@ print(fld_df)
 # Pick a gene to explore further and plot the mean expression level for the before and after groups (save file as mean_expression.png)
 norm_mean_df = createFLDTable(norm_fltr_dict, print_full=True)
 gene_of_interest_df = norm_mean_df.loc['RAB30',:]
-gene_of_interest_df.to_csv('./RAB30_exp.csv')
+#gene_of_interest_df.to_csv('./RAB30_exp.csv')
 
