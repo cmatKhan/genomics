@@ -17,6 +17,10 @@ Part 1.1
 {Command for creating a bed file with the average CpG methylation level in each CGI.}
 {Copy WGBS_CGI_methylation.bed to your submissions directory}
 -
+bedtools intersect -a CGI.bed -b BGM_WGBS_CpG_methylation.bed -loj -sorted > intersect_CGI_BGM_WGBS_CpG.bed
+
+bedtools groupby -i intersect_CGI_BGM_WGBS_CpG.bed -g 1,2,3,4 -c 9 -o mean > WGBS_CGI_methylation.bed
+
 Part 1.2
 {Command for plotting the distribution of average CGI methylation levels}
 {Copy analyze_CGI_methylation.py and WGBS_CGI_methylation_distribution.png to your submissions directory}
