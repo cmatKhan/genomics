@@ -95,6 +95,10 @@ def writeBed(df, output_dir, bed_base_name):
     # Returns: none
     # Output: prints a file called _CpG_methylation.bed as bed (tsv) to specified directory
 
+    # cast position columns to int and sort
+    df = df.astype({1: 'int64', 2:'int64'})
+    df =df.sort_values(by=[1])
+
     output_path = os.path.join(output_dir, bed_base_name +'_CpG_methylation.bed​')
 
     df.to_csv(output_path, index = False, header = False, sep='\t')
