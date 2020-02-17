@@ -31,7 +31,23 @@ Question 3:
 Part 1.3.0
 Gene promoters
 {Command for generating the promoter bed file}
+
 {Justification for promoter definition}
+
+30 to 1000bp upstream
+
+"Our observations that 68% of 40-bp core promoter fragments maintain basal promoter activity and that these fragments
+contain much of the constraint observed in promoters emphasize the importance of the core promoter. However, the
+deletion analyses we report also demonstrate that additional regulatory sequences are present throughout the extended promoter.
+Successive removal of sequences in the -350- to -40-bp region of the promoters significantly reduces promoter activity
+in the transient transfection assay, indicating that these regions contain positive regulatory elements.
+In contrast, the region upstream of -350 tends to contain elements that negatively affect transcription initiation.
+This trend was particularly striking within a few of the -1000- to -500-bp regions."
+
+Cooper SJ, Trinklein ND, Anton ED, Nguyen L, Myers RM.
+Comprehensive analysis of transcriptional promoter structure and function in 1% of the human genome.
+Genome Res. 2006;16(1):1–10. doi:10.1101/gr.4222606
+
 {Copy generate_promoters.py and refGene_promoters.bed to your submissions directory}
 -
 Promoter-CGI and non-promoter-CGI

@@ -40,7 +40,7 @@ def main(argv):
     print("Methylation calculations complete. See ​<WGBS bed basename>​_CpG_methylation.bed​ in output directory for methylation level.")
 
     # create csv to plot methylation in R
-    writeCSV(methyl_coverage_df, output_dir)
+    writeCSV(methyl_coverage_df, output_dir, 'methylation_coverage.csv​')
 
     # plot with R scripts
     print("\n...Plotting distributions of methylation levels and coverage. See the output directory...")
@@ -73,7 +73,7 @@ def createBGSbed(bed_file, output_dir):
     input_bed_df['coverage'] = input_bed_df.apply(lambda row: row[3] + row[4], axis = 1)
     # filter for 0 coverage and write chrm name, start, stop and methylation le of methyl_bed
     methyl_bed = input_bed_df.where(input_bed_df['coverage'] != 0).dropna()
-    writeBed(methyl_bed[[0, 1, 2, 'methyl_level']], output_dir, bed_file_basename)
+    writeBed(methyl_bed[[0, 1, 2, 'methyl_level']], output_dir, bed_file_basename, '_CpG_methylation.bed​')
 
     # return df for graphing purposes
     return input_bed_df[['methyl_level', 'coverage']]
@@ -89,9 +89,9 @@ def cpgMethylLevel(num_c_base_calls, num_t_base_calls):
     else:
         return num_c_base_calls / float(num_c_base_calls + num_t_base_calls)
 
-def writeBed(df, output_dir, bed_base_name):
+def writeBed(df, output_dir, bed_base_name, filename):
     # write .bed style table in output directory
-    # Args: a dataframe with the following columns and an output directory
+    # Args: a dataframe with the following columns, an output directory, and a filename
     # Returns: none
     # Output: prints a file called _CpG_methylation.bed as bed (tsv) to specified directory
 
@@ -99,17 +99,17 @@ def writeBed(df, output_dir, bed_base_name):
     df = df.astype({1: 'int64', 2:'int64'})
     df =df.sort_values(by=[1])
 
-    output_path = os.path.join(output_dir, bed_base_name +'_CpG_methylation.bed​')
+    output_path = os.path.join(output_dir, bed_base_name + filename)
 
     df.to_csv(output_path, index = False, header = False, sep='\t')
 
-def writeCSV(methyl_coverage_df, output_dir):
+def writeCSV(df, output_dir, filename):
     # write a csv of methylation_level and coverage for plotting in R
-    # Args: dataframe with methylation level and coverage
+    # Args: dataframe with methylation level and coverage, output directory and filename
     # Output: prints methylation_coverage.csv to output_dir
 
-    output_path = os.path.join(output_dir, 'methylation_coverage.csv​')
-    methyl_coverage_df.to_csv(output_path, index=False)
+    output_path = os.path.join(output_dir, filename)
+    df.to_csv(output_path, index=False)
 
 # call main method
 if __name__ == "__main__":
