@@ -35,7 +35,6 @@ def main(argv):
 
     avg_cgi_methyl = pd.read_table(bed_file, sep='\t', header = None)
     plotHist(avg_cgi_methyl,4, args.output_dir, bed_file_basename)
-    print(avg_cgi_methyl)
 
 def parseArgs(argv):
     # cmd line input

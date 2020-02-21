@@ -9,9 +9,9 @@ Question 1:
 - Bimodal with high likelihoods at 0 and 1.
   There are twice as many unmethylated CpGs than methylated. This seems to imply that the majority of CpGs on Chromosome 21 are unmethylated.
   I'm not sure if it should, but this was surprising to me. I'll be curious to know if this is close to the expected result.
-  If I were to try to interpret this, I would guess that there are many CpGs that are not in regulatory regions, and therefore less
-  likely to be methylated. In order to test this, I would look at the rates of methylation in known regulatory regions vs those CpGs in
-  areas that we may know are not regulatory.
+  I was expecting more methylated (and repressed) regions than unmethylated. Possibly this means that regions of methylation regulation
+  are more targeted. Alternatively, maybe there are a good number of CG dinucleotides in non regulatory regions and therefor their methylation
+  status is inconsequential. I suspect this is not the case.
 
 Question 2:
 {What does the CpG coverage look like across chromosome 21?}
@@ -76,12 +76,15 @@ bedtools intersect -a promoter_CGI.bed -b BGM_WGBS_CpG_methylation.bed​ -loj >
 bedtools groupby -i intersect_promoter.bed -g 1,2,3,4 -c 9 -o mean > average_promoter_CGI_methylation.bed
 
 {Commands for running analyze_CGI_methylation.py on average_promoter_CGI_methylation.bed and average_non_promoter_CGI_methylation.bed}
+analyze_CGI_methylation.py -b ./average_promoter_CGI_methylation.bed -o .
+analyze_CGI_methylation.py -b ./average_non_promoter_CGI_methylation.bed -o .
 
-{Copy refGene_promoters.bed, promoter_CGI.bed, non_promoter_CGI.bed average_promoter_CGI_methylation.bed, average_non_promoter_CGI_methylation.bed, average_promoter_CGI_methylation.png and average_non_promoter_CGI_methylation.png to your submissions directory}
 -
 Question 4:
 {How do the DNA methylation profiles of promoter-CGIs and non-promoter-CGIs differ?}
--
+- The promoter CGIs are overwhelmingly unmethylated. The non-promoter CGIs are more uniformly distributed in their methylation.
+  This may point to a mistake in my promoter defintion or calculations.
+
 Part 1.3.1
 {Commands for calculating CpG frequency for each promoter type}
 
