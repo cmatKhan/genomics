@@ -75,6 +75,7 @@ that makes such a difference.
 
 - bedtools intersect -a refGene_promoter.bed -b CGI.bed -v > non_promoter_CGI.bed
 
+
 {Justification for overlapping criteria}
 - This is an inner join between a and b. I have tried this also with a left outer join, which retains all columns of a and enters
   NULL if there is no entry for b, but decided this was unnecessary.
@@ -84,6 +85,9 @@ that makes such a difference.
 {Commands for calculating the average CpG methylation for each promoter-CGI and non-promoter-CGI}
 bedtools intersect -a promoter_CGI.bed -b BGM_WGBS_CpG_methylation.bed​ -loj > intersect_promoter.bed
 bedtools groupby -i intersect_promoter.bed -g 1,2,3,4 -c 9 -o mean > average_promoter_CGI_methylation.bed
+
+bedtools intersect -a non_promoter_CGI.bed -b BGM_WGBS_CpG_methylation.bed​ -loj > intersect_non_promoter.bed
+bedtools groupby -i intersect_non_promoter.bed -g 1,2,3,4 -c 9 -o mean > average_non_promoter_CGI_methylation.bed
 
 {Commands for running analyze_CGI_methylation.py on average_promoter_CGI_methylation.bed and average_non_promoter_CGI_methylation.bed}
 analyze_CGI_methylation.py -b ./average_promoter_CGI_methylation.bed -o .
@@ -124,29 +128,50 @@ Question 5:
 Part 2
 {Commands to calculate CGI RPKM methylation scores}
 
+
 {Command to generate the correlation plots}
-
+compare_methylome_technologies.py -md MeDIP_RPKM_methyl_levels.bed -mr MRE_RPKM_methyl_levels.bed -bs BGM_RPKM_methyl_levels.bed -o .
 {Correlations for each comparison}
-
+(same -- see above. the correlations print to stdout)
 {Justification for chosen correlation metric}
+Pearson's correlation coefficient. I thought that there would be a positive correlation between counts in the given technologies.
+However, either I am generating the data incorrectly, this is not the correct comparison statistic, or they don't correlate well.
 
-{Copy compare_methylome_technologies.py, MeDIP_CGI_RPKM.bed, MRE_CGI_RPKM.bed MeDIP_CGI_RPKM_vs_MRE_CGI_RPKM.png, MeDIP_CGI_RPKM_vs_WGBS_CGI_methylation.png, and MRE_CGI_RPKM_vs_WGBS_CGI_methylation.png to your submissions directory}
 -
 Question 6:
 {How do MeDIP-seq and methylation correlate? How do MRE-seq and methylation correlate? How do MeDIP-seq and MRE-seq correlate?}
--
+- The below numbers and the graphs look like I'm be doing something wrong. Else, the correlation is low. The MRE vs WGBS seems to
+  be a bit correlatd, but even that is weak.
+
+
+The pearson R coefficient for MeDIP_Seq_RPKM_vs_MRE_Seq_RPKM
+is (0.03108172430788713, 0.5539030120795345)
+The pearson R coefficient for MeDIP_Seq_RPKM_vs_WGBS_Seq_RPKM
+is (-0.25507994013728924, 7.872154733877305e-07)
+The pearson R coefficient for MRE_Seq_RPKM_vs_WGBS_Seq_RPKM
+is (0.39799148135390455, 2.6464007007930845e-15)
+
+The pearson R coefficient for No_Outlier_MeDIP_Seq_RPKM_vs_MRE_Seq_RPKM_
+is (-0.6046168054870494, 1.178327709101451e-37)
+The pearson R coefficient for No_Outlier_MeDIP_Seq_RPKM_vs_WGBS_Seq_RPKM
+is (-0.38917333749715266, 1.3054713382299519e-14)
+The pearson R coefficient for No_Outlier_MRE_Seq_RPKM_vs_WGBS_Seq_RPKM
+is (0.4036751575938664, 1.0665686790987536e-15)
+
 Outliers
 {Answers to outlier questions}
+Outlier in the MRE seq:
+chr21 	9825442 	9826296
+This seems to be at the beginning of the chromosome.
 
 {If applicable: correlations for each comparison}
-
+See above
 {If applicable: copy the updated figures to your submissions directory}
--
+- Plots are in the submission directory
+
 Comments:
 {Things that went wrong or you can not figure out}
-- This is a long assignment. I would have preferred a bit more time. This assignment also seems to be a good opportunity for instruction on generating
-  some of the more specialized plots. Maybe increase the number/variety of visualizations, but offer two weekends (due a week from the monday following the initial assignment).
-  If the HW following this was lighter, it wouldn't have to throw off the schedule.
+- This is a long assignment. Another weekend would have been very nice and allowed for more focus, checking, etc.
 
 Suggestions:
 {What programming and/or genomics topics should the TAs cover in the next class that would have made this assignment go smoother?}
@@ -157,20 +182,4 @@ Suggestions:
   them already, whereas there is comparably less for the more specialized graphs.
 
 - However, all that said, I'm writing this because there is space for it. I really appreciate these assignments. Thank you all for your time!
-
-Extra credit
-{Commands for running bed_reads_RKPM.pl}
-{Command for running analyze_H3K4me3_scores.py}
-{Copy analyze_H3K4me3_scores.py, H3K4me3_RPKM_promoter_CGI.bed, H3K4me3_RPKM_non_promoter_CGI.bed, and H3K4me3_RPKM_promoter_CGI_and_H3K4me3_RPKM_non_promoter_CGI.png}
--
-Question EC.1:
-{How does the H3K4me3 signal differ in promoter-CGIs and non-promoter-CGIs?}
--
-Question EC.2:
-{What are some better alternatives to model MeDIP-seq data and MRE-seq data instead of using RPKM? Explain.}
--
-Question EC.3:
-{What would be a better way to compare H3K4me3 values instead of using boxplots? Explain.}
--
-
 
