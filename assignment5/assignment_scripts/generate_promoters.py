@@ -102,7 +102,7 @@ def writeBed(df, output_dir, filename):
     # Output: prints a file called _CpG_methylation.bed as bed (tsv) to specified directory
 
     # cast position columns to int and sort
-    df = df.astype({'promoter_start': 'int64', 'promoter_stop': 'int64'})
+    df = df.astype({0: 'str', 'promoter_start': 'int64', 'promoter_stop': 'int64', 3: 'str', 5:'str'})
     df = df.sort_values(by=['promoter_start'])
 
     output_path = os.path.join(output_dir, filename)
