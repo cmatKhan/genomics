@@ -5,20 +5,7 @@ Write a script called ​generate_promoters.py​ that takes a bed file of gene 
 The columns will be
     1) chromosome   2) start    3) stop     4)gene name     5) strand.
 
-usage: generate_promoters.py​​<bed of gene coordinates>
-
-Run ​generate_promoters.py​ on ​refGene.bed​.
-Save the output file as refGene_promoters.bed​.
-In your README, justify how you defined promoter and paste your command for creating this file.
-Generate a bed file of promoter-CGIs called ​promoter_CGI.bed​
-and
-a bed file of non-promoter-CGIs called ​non_promoter_CGI.bed​.
-Promoter-CGIs are defined as CGIs that overlap with a promoter.
-In your README, justify your overlapping criteria and paste your commands for creating these files.
-
-Hint: use ​bedtools intersect​. Calculate the average CpG methylation level for each promoter-CGI and non-promoter-CGI.
-Save these files as ​average_promoter_CGI_methylation.bed​ and average_non_promoter_CGI_methylation.bed​, respectively.
-Paste your commands for creating these files in your README.Hint: see your commands for part 1.1.
+usage: generate_promoters.py​​ -b refGene.bed -o . -bn refGene_promoter.bed
 """
 import argparse
 import pandas as pd
@@ -28,14 +15,20 @@ import sys
 
 def main(argv):
     # main method
+    # Args: cmd line input
+    # Output: reGene_promoter.bed in output_dir
 
     # parse cmd line arguments
     args = parseArgs(argv)
-    try:
-        ref_gene_bed = args.bed_path
-        output_dir = args.output_dir
-    except AttributeError:
-        print('One or both of the required inputs is missing. Please see script usage by entering generate_promoters.py -h')
+    ref_gene_bed = args.bed_path
+    output_dir = args.output_dir
+    output_bed_name = args.output_bed_name
+
+    # verify cmd line input
+    if not os.path.isfile(ref_gene_bed):
+        print('refGene.bed cannot be found. Please check the path and try again')
+    if not os.path.isdir(output_dir):
+        print('The output directory does not exist. Please check the path and try again')
 
     # read in refGene bed
     ref_gene_df = pd.read_csv(ref_gene_bed, sep='\t', header=None)
@@ -44,7 +37,7 @@ def main(argv):
     promoter_bed = createPromoterBed(ref_gene_df)
 
     # write promoter_bed to file in .bed format
-    writeBed(promoter_bed, output_dir, 'promoter_CGI.bed​')
+    writeBed(promoter_bed, output_dir, output_bed_name)
 
 
 def parseArgs(argv):
@@ -54,6 +47,8 @@ def parseArgs(argv):
                         help="[Required] Path to BGM_WGS.bed")
     parser.add_argument('-o', "--output_dir", required=True,
                         help="[Required] Path to output directory")
+    parser.add_argument('-bn', "--output_bed_name", required=True,
+                        help="[Required] The name of the .bed")
 
     # remove script call from list (this is passed as list of cmd line input with script at position 0)
     args = parser.parse_args(argv[1:])
@@ -69,13 +64,29 @@ def createPromoterBed(cds_df):
     promoter_df = cds_df[[0, 3, 5]]
 
     # I found this trick to calculate both columns at once here: https://stackoverflow.com/a/53666187/9708266
-    def f(tss):
-        # simple function that returns a 1x2 series. Used to create promoter start and promoter stop columns
-        # by subtracting 1000 and 40 from the cds start value
-        return pd.Series([tss - 1000, tss - 30])
+    def f_plus(gene_start):
+        # returns a 1x2 series. Used to create promoter start and stop columns for plus strand
+        return pd.Series([gene_start - 1000, gene_start - 30])
 
-    # add promoter start and stop site columns using function f above
-    promoter_df[['promoter_start', 'promoter_stop']] = cds_df[1].apply(f)
+    def f_minus(gene_start):
+        # simple function that returns a 1x2 series. Used to create promoter start and stop columns for minus strand
+        return pd.Series([gene_start + 1000, gene_start + 30])
+
+    # masks used to apply above functions to correct rows in cds_df in calculations below
+    mask_plus = promoter_df[5] == '+'
+    mask_minus = promoter_df[5] == '-'
+
+    # calculate promoter start/stop
+    pos_strand, neg_strand = pd.DataFrame(), pd.DataFrame() # create two dataframes
+    # calc promoter start/stop on + strand
+    pos_strand[['promoter_start', 'promoter_stop']] = cds_df[1].loc[mask_plus].apply(f_plus)
+    # calc promoter start/stop on - strand
+    neg_strand[['promoter_start', 'promoter_stop']] = cds_df[1].loc[mask_minus].apply(f_minus)
+    # combine plus and minus into single df
+    promoter_start_stop = pos_strand.combine_first(neg_strand)
+    # concat onto df with cols chr, gene_name_strand
+    promoter_df = pd.concat([promoter_df, promoter_start_stop], axis=1)
+
 
     # re-order columns
     cols = [0, 'promoter_start', 'promoter_stop', 3, 5]

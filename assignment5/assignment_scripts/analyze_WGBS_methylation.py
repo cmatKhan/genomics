@@ -17,12 +17,13 @@ CpG_methylation_level = C_base_calls / C_base_calls + T_base_calls
 
  usage: analyze_WGBS_methylation.py -b <path_to>/BGM_WGBS.bed -o <path_to_output_directory>
 """
-
 import argparse
 import pandas as pd
+import numpy as np
 import os
 import sys
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def main(argv):
     # main method
@@ -32,15 +33,28 @@ def main(argv):
     # read cmd line input arguments
     args = parseArgs(argv)
     bed_file = args.bed_path
+    bed_file_basename = os.path.splitext(os.path.basename(bed_file))[0]
     output_dir = args.output_dir
+
+    # check the bed file and output directory to make sure both exist
+    if not os.path.isfile(bed_file):
+        print('The .bed you entered cannot be found. Please check the path and re-launch this script.')
+        sys.exit(1)
+    if not os.path.isdir(output_dir):
+        print('The output directory you entered does not exist. Please check the path and re-launch the script')
+        sys.exit(1)
 
     # this function both returns the bed + methyl level as a df and writes the bed + methyl to output_dir
     print('\n...Calculating methylation level and coverage...')
     methyl_coverage_df = createBGSbed(bed_file, output_dir)
-    print("Methylation calculations complete. See ​<WGBS bed basename>​_CpG_methylation.bed​ in output directory for methylation level.")
+    print("Methylation calculations complete. See {}_CpG_methylation.bed​ in output directory for methylation level.".format(bed_file_basename))
 
     # create csv to plot methylation in R
-    writeCSV(methyl_coverage_df, output_dir, 'methylation_coverage.csv​')
+    #writeCSV(methyl_coverage_df, output_dir, 'methylation_coverage.csv​')
+
+    # plot coverage and methylation
+
+    plotHist(methyl_coverage_df, output_dir, bed_file_basename)
 
     # plot with R scripts
     print("\n...Plotting distributions of methylation levels and coverage. See the output directory...")
@@ -110,6 +124,32 @@ def writeCSV(df, output_dir, filename):
 
     output_path = os.path.join(output_dir, filename)
     df.to_csv(output_path, index=False)
+
+def plotHist(df, output_dir, bed_file_basename):
+    df['methyl_level'].hist(grid=True, bins=20, color='#607c8e')
+    plt.title('Methylation Level')
+    plt.xlabel('CpG level')
+    plt.ylabel('Count')
+    plt.grid(axis='y', alpha=0.75)
+    plt.savefig(os.path.join(output_dir, bed_file_basename + '_methylation_distribution.png'))
+    plt.close()
+
+    sns.distplot(df['coverage'], hist=True, kde=True,
+                 bins=10000, color='#607c8e',
+                 hist_kws={'edgecolor': 'black'})
+    # Add labels
+    plt.xlim(0, 100)
+    plt.title('Coverage')
+    plt.xlabel('Coverage')
+    plt.ylabel('Frequency')
+    plt.grid(axis='y', alpha=0.75)
+    plt.savefig(os.path.join(output_dir, bed_file_basename + '_CpG_coverage_distribution.png'))
+    #df['coverage'].hist(grid=True, bins=10000, color='#607c8e', )
+    #plt.title('Coverage')
+    #plt.xlabel('Coverage')
+    #plt.ylabel('Frequency')
+    #plt.grid(axis='y', alpha=0.75)
+    #plt.savefig(os.path.join(output_dir, bed_file_basename + '_CpG_coverage_distribution.png'))
 
 # call main method
 if __name__ == "__main__":
