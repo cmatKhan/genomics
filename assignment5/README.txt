@@ -2,7 +2,7 @@ Assignment 5 Due Friday, February 21 at 10am
 
 Part 1.0
 {Command for running analyze_WGBS_methylation.py}
-- analyze_WGBS_methylation.py -b BGM_WGBS.bed -o .
+- ./analyze_WGBS_methylation.py​ -b data/BGM_WGBS.bed -o .
 
 Question 1:
 {What does DNA methylation look like across chromosome 21?}
@@ -25,13 +25,13 @@ Question 2.1:
 Part 1.1
 {Command for creating a bed file with the average CpG methylation level in each CGI.}
 
-bedtools intersect -a CGI.bed -b BGM_WGBS_CpG_methylation.bed -loj -sorted > intersect_CGI_BGM_WGBS_CpG.bed
+bedtools intersect -a CGI.bed -b BGM_WGBS_CpG_methylation.bed -loj -sorted > data/intersect_CGI_BGM_WGBS_CpG.bed
 
-bedtools groupby -i intersect_CGI_BGM_WGBS_CpG.bed -g 1,2,3,4 -c 9 -o mean > WGBS_CGI_methylation.bed
+bedtools groupby -i data/intersect_CGI_BGM_WGBS_CpG.bed -g 1,2,3,4 -c 9 -o mean > WGBS_CGI_methylation.bed
 
 Part 1.2
 {Command for plotting the distribution of average CGI methylation levels}
-- analyze_CGI_methylation.py -b /home/chase/code/cmatkhan/genomics/assignment5/WGBS_CGI_methylation.bed -o .
+- analyze_CGI_methylation.py -b WGBS_CGI_methylation.bed -o .
 
 Question 3:
 {What does DNA methylation look like for CpGs in CGIs? How does it compare to all the CpGs on chromosome 21?}
@@ -42,7 +42,7 @@ Question 3:
 Part 1.3.0
 Gene promoters
 {Command for generating the promoter bed file}
-generate_promoters.py​​ -b refGene.bed -o . -bn refGene_promoter.bed
+generate_promoters.py​​ -b data/refGene.bed -o . -bn refGene_promoter.bed
 
 {Justification for promoter definition}
 
@@ -61,19 +61,9 @@ Comprehensive analysis of transcriptional promoter structure and function in 1% 
 Genome Res. 2006;16(1):1–10. doi:10.1101/gr.4222606
 
 {Commands for generating promoter-CGI and non-promoter-CGI bed files}
-##### PLEASE NOTE: the refGene_promoter.bed that I included in my submission folder is one I generated on my computer.
-When I ran this on the server, I got the following error:
-nomics/assignment5/CGI.bed > promoter_CGI.bed
-Error: Invalid record in file refGene_promoter.bed. Record is
-chr21	9908188	9907218	TEKT4P2	-
+- bedtools intersect -a refGene_promoter.bed -b data/CGI.bed > promoter_CGI.bed
 
-I then went and casted each column to the correct dtype, just in case, but I continued to get the same error. This is the second time
-I've had an issue between my computer and the server. I am running pandas 1.0.1 while I am using 1.0.0 on my computer, but I can't believe
-that makes such a difference.
-
-- bedtools intersect -a refGene_promoter.bed -b CGI.bed > promoter_CGI.bed
-
-- bedtools intersect -a refGene_promoter.bed -b CGI.bed -v > non_promoter_CGI.bed
+- bedtools intersect -a refGene_promoter.bed -b data/CGI.bed -v > non_promoter_CGI.bed
 
 
 {Justification for overlapping criteria}
@@ -83,11 +73,11 @@ that makes such a difference.
  - -v reports rows in a that are not found in b
 
 {Commands for calculating the average CpG methylation for each promoter-CGI and non-promoter-CGI}
-bedtools intersect -a promoter_CGI.bed -b BGM_WGBS_CpG_methylation.bed​ -loj > intersect_promoter.bed
-bedtools groupby -i intersect_promoter.bed -g 1,2,3,4 -c 9 -o mean > average_promoter_CGI_methylation.bed
+bedtools intersect -a promoter_CGI.bed -b BGM_WGBS_CpG_methylation.bed​ -loj > data/intersect_promoter.bed
+bedtools groupby -i data/intersect_promoter.bed -g 1,2,3,4 -c 9 -o mean > average_promoter_CGI_methylation.bed
 
-bedtools intersect -a non_promoter_CGI.bed -b BGM_WGBS_CpG_methylation.bed​ -loj > intersect_non_promoter.bed
-bedtools groupby -i intersect_non_promoter.bed -g 1,2,3,4 -c 9 -o mean > average_non_promoter_CGI_methylation.bed
+bedtools intersect -a non_promoter_CGI.bed -b BGM_WGBS_CpG_methylation.bed​ -loj > data/intersect_non_promoter.bed
+bedtools groupby -i data/intersect_non_promoter.bed -g 1,2,3,4 -c 9 -o mean > average_non_promoter_CGI_methylation.bed
 
 {Commands for running analyze_CGI_methylation.py on average_promoter_CGI_methylation.bed and average_non_promoter_CGI_methylation.bed}
 analyze_CGI_methylation.py -b ./average_promoter_CGI_methylation.bed -o .
@@ -102,7 +92,7 @@ Question 4:
 Part 1.3.1
 {Commands for calculating CpG frequency for each promoter type}
 
-bedtools getfasta -fi hg19_chr21.fa -bed promoter_CGI.bed > promoter_cgi.fasta
+bedtools getfasta -fi data/hg19_chr21.fa -bed promoter_CGI.bed > promoter_cgi.fasta
 bedtools getfasta -fi hg19_chr21.fa -bed non_promoter_CGI.bed > non_promoter_cgi.fasta
 
 ./nuc_count_multisequence_fasta.py promoter_cgi.fasta
@@ -127,10 +117,16 @@ Question 5:
 
 Part 2
 {Commands to calculate CGI RPKM methylation scores}
+perl bed_reads_RPKM.pl data/CGI.bed data/BGM_MeDIP.bed > MeDIP_CGI_rpkm.bed
+perl bed_reads_RPKM.pl data/CGI.bed data/BGM_MRE.bed > MRE_CGI_rpkm.bed
+perl bed_reads_RPKM.pl data/CGI.bed data/BGM_WGBS.bed > WGBS_CGI_rpkm.bed
 
+
+### PLEASE NOTE: I was getting and error about cmd line input file length, so shortened the filenames
 
 {Command to generate the correlation plots}
-compare_methylome_technologies.py -md MeDIP_RPKM_methyl_levels.bed -mr MRE_RPKM_methyl_levels.bed -bs BGM_RPKM_methyl_levels.bed -o .
+./compare_methylome_technologies.py -md MeDIP_CGI_rpkm.bed -mr MRE_CGI_rpkm.bed -bs WGBS_CGI_rpkm.bed -o .
+
 {Correlations for each comparison}
 (same -- see above. the correlations print to stdout)
 {Justification for chosen correlation metric}
