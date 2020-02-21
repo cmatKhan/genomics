@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
   This script takes the average CGI methylation bed file, plots the distribution of average CGI methylation levels,
   and save the plot as <averageCGI methylation bed basename>._distribution.png
@@ -14,7 +15,8 @@ import seaborn as sns
 
 def main(argv):
     # main method
-    # Args: cmd line input. Use -h at cmd line to display
+    # Args: cmd line input. Use -h at cmd line to
+    # display
     # Output:
 
     # read cmd line input arguments

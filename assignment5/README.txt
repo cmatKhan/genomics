@@ -42,7 +42,7 @@ Question 3:
 Part 1.3.0
 Gene promoters
 {Command for generating the promoter bed file}
-
+generate_promoters.py​​ -b refGene.bed -o . -bn refGene_promoter.bed
 
 {Justification for promoter definition}
 
@@ -60,20 +60,20 @@ Cooper SJ, Trinklein ND, Anton ED, Nguyen L, Myers RM.
 Comprehensive analysis of transcriptional promoter structure and function in 1% of the human genome.
 Genome Res. 2006;16(1):1–10. doi:10.1101/gr.4222606
 
-{Copy generate_promoters.py and refGene_promoters.bed to your submissions directory}
--
-Promoter-CGI and non-promoter-CGI
 {Commands for generating promoter-CGI and non-promoter-CGI bed files}
-bedtools intersect -a refGene_promoter.bed -b CGI.bed -loj > promoter_CGI.bed
+- bedtools intersect -a refGene_promoter.bed -b CGI.bed > promoter_CGI.bed
 
-bedtools intersect -a refGene_promoter.bed -b CGI.bed -v > non_promoter_CGI.bed
+- bedtools intersect -a refGene_promoter.bed -b CGI.bed -v > non_promoter_CGI.bed
 
 {Justification for overlapping criteria}
-Left Outer Join returns all values in a which overlap with B. If no overlap is found, A is reported with value Null.
-This returns all information in our reference which overlaps with CGI.bed, while also providing info on what does not.
+- This is an inner join between a and b. I have tried this also with a left outer join, which retains all columns of a and enters
+  NULL if there is no entry for b, but decided this was unnecessary.
+
+ - -v reports rows in a that are not found in b
 
 {Commands for calculating the average CpG methylation for each promoter-CGI and non-promoter-CGI}
-
+bedtools intersect -a promoter_CGI.bed -b BGM_WGBS_CpG_methylation.bed​ -loj > intersect_promoter.bed
+bedtools groupby -i intersect_promoter.bed -g 1,2,3,4 -c 9 -o mean > average_promoter_CGI_methylation.bed
 
 {Commands for running analyze_CGI_methylation.py on average_promoter_CGI_methylation.bed and average_non_promoter_CGI_methylation.bed}
 
@@ -84,29 +84,39 @@ Question 4:
 -
 Part 1.3.1
 {Commands for calculating CpG frequency for each promoter type}
-{CpG frequencies for each promoter type}
--
+
 bedtools getfasta -fi hg19_chr21.fa -bed promoter_CGI.bed > promoter_cgi.fasta
 bedtools getfasta -fi hg19_chr21.fa -bed non_promoter_CGI.bed > non_promoter_cgi.fasta
 
-
 ./nuc_count_multisequence_fasta.py promoter_cgi.fasta
-promoter_cgi
-CG:0.02750335674884078
-
 ./nuc_count_multisequence_fasta.py non_promoter_cgi.fasta
+
+
+{CpG frequencies for each promoter type}
+
+promoter_cgi
+CG:0.10756197050517728
+
 non_promoter_cgi
 CG:0.015648984051825063
 
+
 Question 5:
 {What is a possible biological explanation for the difference in CpG frequencies?  Interpret your results from parts 1.3.0 and 1.3.1: what are the “simple rules” for describing regulation by DNA methylation in promoters?}
-- The higher rate of methylation in promoters signals that methylation is more likely to occur where it has a functional impact on transcription.
+- It is not surprising (in fact, reassuring that I'm doing something a little right) that there are higher rates of CpGs
+  in promoter regions as they are functional units of regulation. Simple rules:
+     1) promoter regions are (quite significantly, it seems) enriched for CpG
+     2) Methylated CpG is more common in promoter regions
 
 Part 2
 {Commands to calculate CGI RPKM methylation scores}
+
 {Command to generate the correlation plots}
+
 {Correlations for each comparison}
+
 {Justification for chosen correlation metric}
+
 {Copy compare_methylome_technologies.py, MeDIP_CGI_RPKM.bed, MRE_CGI_RPKM.bed MeDIP_CGI_RPKM_vs_MRE_CGI_RPKM.png, MeDIP_CGI_RPKM_vs_WGBS_CGI_methylation.png, and MRE_CGI_RPKM_vs_WGBS_CGI_methylation.png to your submissions directory}
 -
 Question 6:
@@ -114,15 +124,26 @@ Question 6:
 -
 Outliers
 {Answers to outlier questions}
+
 {If applicable: correlations for each comparison}
+
 {If applicable: copy the updated figures to your submissions directory}
 -
 Comments:
 {Things that went wrong or you can not figure out}
--
+- This is a long assignment. I would have preferred a bit more time. This assignment also seems to be a good opportunity for instruction on generating
+  some of the more specialized plots. Maybe increase the number/variety of visualizations, but offer two weekends (due a week from the monday following the initial assignment).
+  If the HW following this was lighter, it wouldn't have to throw off the schedule.
+
 Suggestions:
 {What programming and/or genomics topics should the TAs cover in the next class that would have made this assignment go smoother?}
-- It would be great to talk a bit about generating test data. It's something I know I should do before I start working on something and I hardly ever do.
+- It would be great to talk a bit about generating test data and writing various types of tests and checks.
+
+- I'd also really like to get a bit more hands on instruction on creating the sort of graphs and visualizations that are common in genomics, especially visualizations
+  that aren't of the standard variety. This is not b/c the basic plots aren't important, but due to the fact that there is so much documentation on creating
+  them already, whereas there is comparably less for the more specialized graphs.
+
+- However, all that said, I'm writing this because there is space for it. I really appreciate these assignments. Thank you all for your time!
 
 Extra credit
 {Commands for running bed_reads_RKPM.pl}
