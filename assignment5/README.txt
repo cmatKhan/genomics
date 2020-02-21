@@ -46,7 +46,7 @@ generate_promoters.py​​ -b refGene.bed -o . -bn refGene_promoter.bed
 
 {Justification for promoter definition}
 
-30 to 1000bp upstream
+30 to 1000bp upstream of the exon closest to the 5' end
 
 "Our observations that 68% of 40-bp core promoter fragments maintain basal promoter activity and that these fragments
 contain much of the constraint observed in promoters emphasize the importance of the core promoter. However, the
@@ -61,6 +61,16 @@ Comprehensive analysis of transcriptional promoter structure and function in 1% 
 Genome Res. 2006;16(1):1–10. doi:10.1101/gr.4222606
 
 {Commands for generating promoter-CGI and non-promoter-CGI bed files}
+##### PLEASE NOTE: the refGene_promoter.bed that I included in my submission folder is one I generated on my computer.
+When I ran this on the server, I got the following error:
+nomics/assignment5/CGI.bed > promoter_CGI.bed
+Error: Invalid record in file refGene_promoter.bed. Record is
+chr21	9908188	9907218	TEKT4P2	-
+
+I then went and casted each column to the correct dtype, just in case, but I continued to get the same error. This is the second time
+I've had an issue between my computer and the server. I am running pandas 1.0.1 while I am using 1.0.0 on my computer, but I can't believe
+that makes such a difference.
+
 - bedtools intersect -a refGene_promoter.bed -b CGI.bed > promoter_CGI.bed
 
 - bedtools intersect -a refGene_promoter.bed -b CGI.bed -v > non_promoter_CGI.bed
