@@ -44,7 +44,7 @@ def parseArgs(argv):
     # cmd line input
     parser = argparse.ArgumentParser(description="This script generates sbatch script and submits sbatch job.")
     parser.add_argument("-b", "--bed_path", required=True,
-                        help="[Required] Path to BGM_WGS.bed")
+                        help="[Required] Path to refGene.bed")
     parser.add_argument('-o', "--output_dir", required=True,
                         help="[Required] Path to output directory")
     parser.add_argument('-bn', "--output_bed_name", required=True,
@@ -81,7 +81,7 @@ def createPromoterBed(cds_df):
     # calc promoter start/stop on + strand
     pos_strand[['promoter_start', 'promoter_stop']] = cds_df[1].loc[mask_plus].apply(f_plus)
     # calc promoter start/stop on - strand
-    neg_strand[['promoter_start', 'promoter_stop']] = cds_df[1].loc[mask_minus].apply(f_minus)
+    neg_strand[['promoter_start', 'promoter_stop']] = cds_df[2].loc[mask_minus].apply(f_minus)
     # combine plus and minus into single df
     promoter_start_stop = pos_strand.combine_first(neg_strand)
     # concat onto df with cols chr, gene_name_strand
