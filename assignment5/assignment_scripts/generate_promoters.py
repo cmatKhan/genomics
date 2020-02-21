@@ -70,7 +70,7 @@ def createPromoterBed(cds_df):
 
     def f_minus(gene_start):
         # simple function that returns a 1x2 series. Used to create promoter start and stop columns for minus strand
-        return pd.Series([gene_start + 1000, gene_start + 30])
+        return pd.Series([gene_start + 30, gene_start + 1000])
 
     # masks used to apply above functions to correct rows in cds_df in calculations below
     mask_plus = promoter_df[5] == '+'
