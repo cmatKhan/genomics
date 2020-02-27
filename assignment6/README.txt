@@ -1,3 +1,5 @@
+ ----> reverse complement and scoring matrix
+
 Question 1:
 {Score for highest affinity binding site for the TF scoring matrix}
 {Sequence(s) corresponding to highest affinity binding site for the TF scoring matrix}

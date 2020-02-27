@@ -57,6 +57,7 @@ def plotHist(df,col, output_dir, bed_file_basename):
     plt.savefig(os.path.join(output_dir, bed_file_basename + '_methylation_distribution.png'))
     plt.close()
 
+
 # call main method
 if __name__ == "__main__":
     main(sys.argv)
