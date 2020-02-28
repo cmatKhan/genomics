@@ -15,15 +15,11 @@ def main(argv):
     """
     args = parseArgs(argv)
 
-    input_matrix_name = os.path.split(os.path.basename(args.matrix))[1]
-    output = os.path.join(args.output_dir, input_matrix_name + '_highest_scoring_sequence.txt')
-
-    polymerase_score_matrix = create_scoring_matrix_from_file('/home/chase/code/cmatkhan/genomics/assignment6/polymerase_score_matrix.txt')
-    tf_score_matrix = create_scoring_matrix_from_file('/home/chase/code/cmatkhan/genomics/assignment6/tf_score_matrix.txt')
-
     # create scoring matrix from file
-    # scoring_matrix = create_scoring_matrix_from_file(args.matrix)
-    sequence, score = get_highest_score_sequence(tf_score_matrix)
+    scoring_matrix = create_scoring_matrix_from_file(args.matrix)
+
+    # retrieve highest scoring sequence and score
+    sequence, score = get_highest_score_sequence(scoring_matrix)
 
     print("The highest scoring sequence is {} with a score of {}".format(sequence, score))
 
@@ -36,8 +32,6 @@ def parseArgs(argv):
     parser = argparse.ArgumentParser(description="This script generates sbatch script and submits sbatch job.")
     parser.add_argument("-m", "--matrix", required=True,
                         help="[Required] Path to scoring matrix. matricies must be in nucleotide x (sequence length) format.")
-    parser.add_argument('-o', "--output_dir", required=True,
-                        help="[Required] Output dir")
 
     # remove script call from list (this is passed as list of cmd line input with script at position 0)
     args = parser.parse_args(argv[1:])

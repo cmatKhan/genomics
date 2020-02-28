@@ -9,6 +9,7 @@ Args:
     sequence_file = Path to DNA sequence file.
 """
 import sys
+import os
 
 # Helper dictionary for reverse complementation
 nucleotide_complement = { 'A':'T', 'C':'G', 'G':'C', 'T':'A' }
@@ -69,6 +70,21 @@ def filter_hit_list(hit_list, threshold):
         Args: hit_list -- a list of tuples describing position, score and sequence. threshold at which to keep tuples
         Returns: a filtered list
     """
+    remove_list = []
+    # loop through tuples in list
+    for tuple in hit_list:
+        # compare score to threshold
+        if tuple[1] <= threshold:
+            # if the score is less than the threshold, add it to the remove list
+            remove_list.append(tuple)
+    # remove items on the remove_list from hit_list
+    #https: // stackoverflow.com / a / 4211228 / 9708266
+    fltr_list = [x for x in hit_list if x not in remove_list]
+
+    # return the list
+    return fltr_list
+
+
 
 ###############################################################
 # End functions
@@ -79,19 +95,13 @@ def filter_hit_list(hit_list, threshold):
 ###############################################################
 
 # Check the correct number of command line arguments
-#if(len(sys.argv)!= 3):
-#    sys.exit(__doc__)
+if(len(sys.argv)!= 4):
+    sys.exit(__doc__)
 
-#score_matrix_file = sys.argv[1]
-#sequence_file = sys.argv[2]
-
-polymerase_score_matrix = '/home/chase/code/cmatkhan/genomics/assignment6/polymerase_score_matrix.txt'
-tf_score_matrix = '/home/chase/code/cmatkhan/genomics/assignment6/tf_score_matrix.txt'
-promoter1 = '/home/chase/code/cmatkhan/genomics/assignment6/promoter1.txt'
-promoter2 = '/home/chase/code/cmatkhan/genomics/assignment6/promoter2.txt'
-
-score_matrix_file = polymerase_score_matrix
-sequence_file = promoter1
+# assign cmd line arguments to variables
+score_matrix_file = sys.argv[1]
+sequence_file = sys.argv[2]
+threshold = float(sys.argv[3])
 
 # read a file containing a columnar representation of a matrix, return a dictionary representation of the same matrix
 score_matrix = create_scoring_matrix_from_file(score_matrix_file)
@@ -111,7 +121,9 @@ forward_hit_list = [ (i, score_with_matrix(forward_search_sequence[i:i + motif_w
 # do the same, but for the reverse complement
 reverse_hit_list = [ (len(reverse_search_sequence) - i - motif_width, score_with_matrix(reverse_search_sequence[i:i+motif_width], score_matrix), reverse_search_sequence[i:i + motif_width]) for i in range(last_index) ]
 
-
+# filter lists
+forward_hit_list_fltr = filter_hit_list(forward_hit_list, threshold)
+reverse_hit_list_fltr = filter_hit_list(reverse_hit_list, threshold)
 
 # Print result to stdout. If either hit_list is 0, inform user
 if len(forward_hit_list) == 0:
@@ -119,9 +131,13 @@ if len(forward_hit_list) == 0:
 elif len(reverse_hit_list) == 0:
     print("No threshold-exceeding hits found in the reverse direction!")
 else:
-    print("orientation\tposition\tscore")
-    for hit in forward_hit_list:
-        print("forward\t{position:d}\t{score:.2f}\t{sequence:s}".format(position=hit[0], score=hit[1], sequence=hit[3]))
+    print("The results for {} and {} at threshold {} are:\n".format(os.path.basename(score_matrix_file), os.path.basename(sequence_file), threshold))
+    print('Forward and reverse with scores greater than or equal to {}'.format(threshold))
+    print("orientation\tposition\tscore\tsequence")
+    for hit in forward_hit_list_fltr:
+        print("forward\t{position:d}\t{score:.2f}\t{sequence:s}".format(position=hit[0], score=hit[1], sequence=hit[2]))
+    for hit in reverse_hit_list_fltr:
+        print("reverse\t{position:d}\t{score:.2f}\t{sequence:s}".format(position=hit[0], score=hit[1], sequence=hit[2]))
 
 
 
