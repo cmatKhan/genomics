@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Scan a DNA sequence to find putative binding sites
 
-Usage: python3 scan_sequence.py <scoring_matrix> <sequence_file>
+Usage: python3 scan_sequence.py <scoring_matrix> <sequence_file> <threshold>
 
 Args:
     scoring_matrix = Path to scoring matrix. The rows of the matrix correspond 
        to A, C, G, and T, and the columns correspond to positions
     sequence_file = Path to DNA sequence file.
+    threshold = the thershold on which to filter scores. Scores less than this number will not be printed.
 """
 import sys
 import os
