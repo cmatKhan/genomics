@@ -1,0 +1,4 @@
+question3: how to minimize # of non determine (no or diff than exp) celltags 
+   where the tags are inserted? not going into "weird" place -- somewhere that is going to be silenced
+
+   
