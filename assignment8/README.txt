@@ -3,7 +3,7 @@ Part I
 
 Question 1:
 {Exact command to run count_gv.py}
-/count_gv.py -snv SNV_indel.biallelic.vcf -sv sv.reclassed.filtered.vcf
+/count_gv.py -snv git staSNV_indel.biallelic.vcf -sv sv.reclassed.filtered.vcf
 {Output count table}
 - {'SNV': 4086192, 'INDEL': 479363, 'DEL': 1664, 'DUP': 530, 'INV': 95, 'MEI': 1200, 'BND': 2690}
 
