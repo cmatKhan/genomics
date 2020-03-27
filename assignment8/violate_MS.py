@@ -30,8 +30,6 @@ def main(argv):
     else:
         snv_NA12878 = QuantifyIndividualGenotype('snv', snv_file, 'NA12878', variant_categories, 'NA12891', 'NA12892')
 
-    snv_NA12878.evalulateMedelianSegregation()
-
     print(snv_NA12878.ms_genotype_violation_dict)
     print('The total number of violations is %i' % sum(snv_NA12878.ms_genotype_violation_dict.values()))
 
