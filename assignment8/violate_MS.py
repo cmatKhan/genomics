@@ -1,18 +1,12 @@
+#!/usr/bin/env python3
+
 """
-Step 2: Write a python script, violate_MS.py, to count the number of variants that clearly violate the rules of Mendelian segregation,
-given the trio’s relationships to one another. (For simplicity,only consider autosome in this assignment, but in reality,
-autosomes and sex chromosomes are all important.)
+count the number of variants that clearly violate the rules of Mendelian segregation,
+given the trio’s relationships to one another. With the -t flag, the user may add a threshold.
+If any of the three genotypes fall below this threshold, they will be filtered out.
+If -t is not passed, no filtering takes place.
 
-The usage of the script will be: $ python3 violate_MS.py <SNV_indel VCF>
-
-tep 3: Modify violate_MS.py to filter variants such that you only keep records in which all three individuals in the trio
-have GQ scores at or above a given threshold. If any of the three are missing GQ values or if any value is below the threshold,
-that record should not be kept. If the user does not provide a threshold, the script should not filter the variants.
-(For simplicityagain,only consider autosome)
-
-Run your modified violate_MS.py on the trio data with a GQ threshold of 20.
-
-The usage of the script will now be: $ python3 violate_MS.py <SNV_indel VCF> [GQ threshold*] *default: no thresholding based on genotype quality score
+usage: violate_MS.py <SNV_indel VCF> [GQ threshold*] *default: no thresholding based on genotype quality score
 
 """
 
