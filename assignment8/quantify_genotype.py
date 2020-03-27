@@ -1,11 +1,11 @@
+#!/usr/bin/env python3
+
 """
 quantify the number of homozygous and heterozygous SNVs and indels, for the individual NA12878.
 
 usage: quantify_genotype.py <SNV_indel VCF>
 
 """
-
-#!/usr/bin/env python3
 
 import argparse
 import sys
