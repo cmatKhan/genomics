@@ -30,6 +30,8 @@ def main(argv):
     else:
         snv_NA12878 = QuantifyIndividualGenotype('snv', snv_file, 'NA12878', variant_categories, 'NA12891', 'NA12892')
 
+    snv_NA12878.evalulateMedelianSegregation()
+
     print(snv_NA12878.ms_genotype_violation_dict)
     print('The total number of violations is %i' % sum(snv_NA12878.ms_genotype_violation_dict.values()))
 
@@ -315,7 +317,7 @@ class QuantifyIndividualGenotype(IndividualVariantObject):
         if self.vcf_type == 'sv':
             sys.exit('This function only quantifies SN variants. Please input SNV')
         print(
-            "...counting SNV and INDEL genotypes in individual %s..." % self.individual)  # copied code -- no good. should be in method
+            "...evaluating mendelian segregation in %s..." % self.individual)  # copied code -- no good. should be in method
         with open(self.vcf_path) as file:
             for line in file:
                 # skip metadata lines and sex chromosome
