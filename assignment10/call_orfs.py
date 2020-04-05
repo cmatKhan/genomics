@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """
-    scan all 6 reading frames of a given line in a fasta of contigs for ORFs, extract longest ORF from each contig
+    scan all 6 reading frames of a given line in a fasta of contigs for ORFs, extract longest nonoverlapping ORFs from each reading frame in each contig
     input: fasta of contigs
-    output: all_orfs.fna -- longest orf in each contig
-            all_proteins.faa -- all_orfs sequences translated to amino acid sequence
-    usage: call_orfs.py -i <contig_file>
+    output:  in $PWD: all_orfs.fna -- longest non overlapping orfs in each contig
+                      all_proteins.faa -- all_orfs sequences translated to amino acid sequence
+    usage: call_orfs.py -f <contig_file>
 """
 import sys
 import argparse
-import re
 
 def main(argv):
     """ main method
@@ -22,8 +21,8 @@ def main(argv):
     translated_longest_orf_dict = {fasta_header: translateSequenceToAminoAcid(nuc_seq)
                                    for fasta_header, nuc_seq in longest_orf_dict.items()}
     # write both to file
-    writeFasta(longest_orf_dict)
-    writeFasta(translated_longest_orf_dict)
+    writeFasta(longest_orf_dict, 'all_orfs.fna')
+    writeFasta(translated_longest_orf_dict, 'all_proteins.faa')
 
 def parseArgs(argv):
     parser = argparse.ArgumentParser(
@@ -94,76 +93,56 @@ def createLongestOrfDict(fasta_path):
     :param fasta_path: path to input fasta of contigs to evaluate for longest ORF
     :return: dict of longest ORF from each contig
     """
-    longest_orf_dict = {}
+    longest_nonoverlapping_orf_dict = {}
 
     with open(fasta_path, 'r') as fasta_file:
         line = fasta_file.readline()
         while line:
             if line.startswith('>'):
+                # extract relevant contig data from fasta header
                 orf_fasta_contig_description = line.split('_')[0:5]
-                regex = r">\d_.*_.*_Contig_\d*_"
-                if not re.match(orf_fasta_contig_description, regex):
-                    raise Exception('input fasta header does not match expected pattern. '
-                                    'expected pattern eg >1_G7_AZ_Contig_\\d*_<any_other_info>')
-                contig_header = orf_fasta_contig_description
-                sequence = next(line)
-                orf = longestOpenReadingFrame(contig_header, sequence)
-                longest_orf_dict.update(orf)  # add orf to longest_orf_dict
+                contig_header = "_".join(orf_fasta_contig_description)
+                # extract sequence
+                sequence = fasta_file.readline().strip()
+                orfs = longestOpenReadingFrame(contig_header, sequence)
+                # add orfs to longest_orf_dict
+                longest_nonoverlapping_orf_dict.update(orfs)
 
             # read next line and continue while loop, if line exists
             line = fasta_file.readline()
 
-    return longest_orf_dict
+    return longest_nonoverlapping_orf_dict
 
 def longestOpenReadingFrame(contig_header, sequence):
     """ read sequence, evaluate all 6 reading frames, return longest ORF
     :param sequence: a nucleotide sequence
     :param contig_header: extracted from input fasta. see main method
-    :return: longest ORF as dictionary {[<contig_header_<direction>_<length>] : ATACC..}
+    :return: non overlapping ORF as dictionary {[<contig_header_<orf_number>_<direction>_<length>] : ATACC..}
+             where orf_number is arbitrary sequential number of orfs found in a given sequence
     """
-    # instantiate list to hold longest orf in the 3 forward reading frames
-    forward_orfs = []
+    # instantiate dictionary for forward and reverse orfs
+    orf_dict = {'forward': [], 'reverse': []}
+    # instantiate a dict to hold the orfs in the structure described in the :return: statement in docstring
+    fasta_orf_dict = {}
+
     # forward reading frames
     for index in range(0, 3):
-        forward_orfs.append(findLongestOpenReadingFrame(sequence[index:]))
-    # get longest of the forward orfs
-    forward_longest_orf = max(forward_orfs, key=len)
+        orf_dict['forward'].extend(findLongestOpenReadingFrame(sequence[index:]))
 
     # take reverse complement of the sequence
     reverse_complement = reverseComplement(sequence)
-    # instantiate list to hold longest orfs in reverse direction
-    reverse_orfs = []
     for index in range(0, 3):
-        reverse_orfs.append(findLongestOpenReadingFrame(reverse_complement[index:]))
-    # get longest of the reverse orfs
-    reverse_longest_orf = max(reverse_orfs, key=len)
+        orf_dict['reverse'].extend(findLongestOpenReadingFrame(reverse_complement[index:]))
 
-    if len(forward_longest_orf) > len(reverse_longest_orf):
-        longest_orf = forward_longest_orf
-        direction = 'forward'
-        length = len(forward_longest_orf)
-    elif len(reverse_longest_orf) > len(forward_longest_orf):
-        longest_orf = reverse_longest_orf
-        direction = 'reverse'
-        length = len(reverse_longest_orf)
-    else:
-        print('\nThe forward and reverse longest orf are equal in length.'
-              '\nenter f to keep the forward, r to keep the reverse')
-        response = input()
-        if response == 'f':
-            longest_orf = forward_longest_orf
-            direction = 'forward'
-            length = len(forward_longest_orf)
-        elif response == 'r':
-            longest_orf = reverse_longest_orf
-            direction = 'reverse'
-            length = len(reverse_longest_orf)
-        else:
-            sys.exit('You needed to enter either f or r. Try again from the beginning.')
+    for direction, orfs_list in orf_dict.items():
+        orf_number = 0
+        for orf in orfs_list:
+            if not orf == '':  # skip empty strings -- these are from reading frames that did not contain orfs above the threshold
+                orf_number = orf_number + 1 # increment orf_number
+                fasta_header = '%s_%s_%s_%s' % (contig_header, orf_number, direction, len(orf)) # create fasta header
+                fasta_orf_dict.setdefault(fasta_header, orf) # set entry in dict
 
-    key = '%s_%s_%s' % (contig_header, direction, length)
-    sequence = longest_orf
-    return {key: sequence}
+    return fasta_orf_dict
 
 def findLongestOpenReadingFrame(sequence, **kwargs):
     """
@@ -175,6 +154,7 @@ def findLongestOpenReadingFrame(sequence, **kwargs):
     :param kwargs: used to pass longest_orf and orf_list during recursion
     :return: the longest ORF in sequence (note: this does not account for reading frames -- starts at position 0)
     """
+    threshold = 100 # threshold below which orfs will be filtered out
     # store stop codons
     stop_codons = ['TAA', 'TAG', 'TGA']
     # store longest_orf and orf_list if passed. else, initiate variables
@@ -191,20 +171,22 @@ def findLongestOpenReadingFrame(sequence, **kwargs):
     while not sequence[0:3] == 'ATG' and len(sequence) > 3:
         sequence = sequence[3:]
     # if it is still possible to find a longer ORF in the sequence, look for it.
-    if not len(sequence) < longest_orf:
+    if not len(sequence) < threshold:
         # scan for stop codons
         for i in range(3, len(sequence) - 2, 3):
             # if a stop codon is found
             if sequence[i : i+3] in stop_codons:
-                # update orf_list
                 orf = sequence[0 : i+3]
-                orf_list.append(orf)
-                # if this orf is longer than longest_orf, update longest_orf
-                if len(orf) > longest_orf:
-                    longest_orf = len(orf)-3 # do not count stop codon
+                if len(orf) > threshold:  # filter orfs less than threshold
+                    orf_list.append(orf)
+                    # if this orf is longer than longest_orf, update longest_orf
+                    if len(orf) > longest_orf:
+                        longest_orf = len(orf)-3 # do not count stop codon
                 # recursive step
                 return findLongestOpenReadingFrame(sequence[i+3:], longest_orf = longest_orf, orf_list = orf_list)
-
+    # return statement for base case
+    if len(orf_list) > 1:
+        orf_list.pop(0)
     return orf_list
 
 def reverseComplement(sequence):
