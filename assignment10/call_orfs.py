@@ -26,7 +26,7 @@ def main(argv):
 
 def parseArgs(argv):
     parser = argparse.ArgumentParser(
-        description="scan all 6 reading frames of a given line in a fasta of contigs for ORFs, extract longest ORF from each contig")
+        description="scan all 6 reading frames of a given line in a fasta of contigs for ORFs, extract longest nonoverlapping ORFs from each contig")
     parser.add_argument("-f", "--fasta_path", required=True,
                         help="[Required] Directory path of fastq files.\n")
 
