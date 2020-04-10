@@ -77,7 +77,7 @@ def translateSequenceToAminoAcid(orf_sequence):
         raise Exception('sequence does not end with a stop codon. Are you sure this is an ORF?')
     # if the sequence passes the tests above, translate
     else:
-        # iterate overs sequence in chunks of 3
+        # iterate over sequence in chunks of 3
         for index in range(0, len(orf_sequence) - 2, 3):
             # check to make sure there is not a stop codon before the end of the orf
             if aa_dict[orf_sequence[index:index + 3]] == 'STOP' and not index + 3 == len(orf_sequence):

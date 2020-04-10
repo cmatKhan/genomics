@@ -1,0 +1,20 @@
+#                                                                             --- full sequence ---- --- best 1 domain ---- --- domain number estimation ----
+# target name        accession  query name                         accession    E-value  score  bias   E-value  score  bias   exp reg clu  ov env dom rep inc description of target
+#------------------- ----------               -------------------- ---------- --------- ------ ----- --------- ------ -----   --- --- --- --- --- --- --- --- ---------------------
+MFS_1                RF0102     gene_3|GeneMark.hmm|130_aa|+|1619|2011 -              5e-17   55.3   6.4     6e-17   55.0   6.4   1.1   1   0   0   1   1   1   1 PF07690.11 Major Facilitator Superfamily [ARO:0010002]
+MFS_1                RF0102     gene_6|GeneMark.hmm|117_aa|-|3701|4054 -            1.2e-10   34.2  10.3   1.3e-10   34.1  10.3   1.1   1   0   0   1   1   1   1 PF07690.11 Major Facilitator Superfamily [ARO:0010002]
+MFS_1                RF0102     gene_8|GeneMark.hmm|410_aa|+|413|1645 -            9.9e-30   97.0  40.6   9.9e-30   97.0  40.6   1.3   2   0   0   2   2   1   1 PF07690.11 Major Facilitator Superfamily [ARO:0010002]
+TetM-TetW-TetO-TetS  RF0133     gene_12|GeneMark.hmm|354_aa|-|2|1063 -           6.1e-213  701.8   0.0  6.8e-213  701.7   0.0   1.0   1   0   0   1   1   1   1 "tetM, tetW, tetO, and tetS: tetracycline resistance ribosomal protection protein" [ARO:3000186;ARO:3000194;ARO:3000190;ARO:3000192]
+Beta-lactamase       RF0038     gene_13|GeneMark.hmm|62_aa|+|2|190 -            1.7e-13   43.9   0.1   1.7e-13   43.8   0.1   1.0   1   0   0   1   1   1   1 PF00144.19 Beta-lactamase [ARO:3000001]
+Beta-lactamase       RF0038     gene_14|GeneMark.hmm|194_aa|+|180|764 -            2.7e-34  112.2   0.3     3e-34  112.1   0.3   1.0   1   0   0   1   1   1   1 PF00144.19 Beta-lactamase [ARO:3000001]
+Small_Multi_Drug_Res RF0169     gene_16|GeneMark.hmm|105_aa|-|1449|1766 -            9.9e-34  109.4  12.4   1.3e-33  109.1  12.4   1.1   1   0   0   1   1   1   1 PF00893.14_Small Multidrug Resistance protein
+#
+# Program:         hmmscan
+# Version:         3.1b2 (February 2015)
+# Pipeline mode:   SCAN
+# Query file:      ../MetaMark_output/mgm_orfs_1.fna
+# Target file:     /home/assignments/assignment10/Resfams/resfams.hmm
+# Option settings: hmmscan --tblout resfams_annotations.txt --cut_ga /home/assignments/assignment10/Resfams/resfams.hmm ../MetaMark_output/mgm_orfs_1.fna 
+# Current dir:     /home/cmateusiak/assignment10/work/hmmscan_output
+# Date:            Tue Apr  7 19:46:50 2020
+# [ok]
