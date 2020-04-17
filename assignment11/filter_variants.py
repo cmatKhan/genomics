@@ -18,8 +18,8 @@ def main(argv):
     :param argv: cmd line arguments
     """
     # create logger
-    global logger
-    logger = createLogger('./log/assignment11.log',__name__)
+    # global logger
+    # logger = createLogger('./log/assignment11.log',__name__)
 
     # parse cmd line arguments
     args = parseArgs(argv)
@@ -71,11 +71,13 @@ def createVariantBarcodeDict(line_generator):
         line = line.strip().split('\t')
         barcode_dict.setdefault(line[0], [])
         if not len(barcode_dict[line[0]]) == 0:
-            logger.warning('the barcode %s is not unique' % line[0])
+            # logger.warning('the barcode %s is not unique' % line[0])
+            pass
         # split each column on ':'
         if len(line) < 3:
-            logger.warning('Variant %s has less than 2 sets of barcodes. '
-                           'Check the formatting and enter a dummy value for the missing values in the line.' % line)
+            # logger.warning('Variant %s has less than 2 sets of barcodes. '
+            #                'Check the formatting and enter a dummy value for the missing values in the line.' % line)
+            pass
         else:
             line[1] = np.array(line[1].split(':'))
             barcode_dict[line[0]].append(list(np.unique(line[1])))

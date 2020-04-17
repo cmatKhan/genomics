@@ -25,8 +25,8 @@ def main(argv):
     :param argv: cmd line arguments
     """
     # create logger
-    global logger
-    logger = createLogger('/home/chase/code/cmatkhan/genomics/assignment11/log/assignment11.log', __name__)
+    # global logger
+    # logger = createLogger('/home/chase/code/cmatkhan/genomics/assignment11/log/assignment11.log', __name__)
 
     # parse cmd line arguments
     args = parseArgs(argv)

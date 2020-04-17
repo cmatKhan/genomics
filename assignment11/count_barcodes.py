@@ -18,9 +18,9 @@ def main(argv):
     """ main method
     :param argv: cmd line arguments
     """
-    # create logger
-    global logger
-    logger = createLogger('/home/chase/code/cmatkhan/genomics/assignment11/log/assignment11.log', __name__)
+    # # create logger
+    # global logger
+    # logger = createLogger('/home/chase/code/cmatkhan/genomics/assignment11/log/assignment11.log', __name__)
     # parse cmd line arguments
     args = parseArgs(argv)
     filtered_variant_to_barcode_path = args.filtered_variant_to_barcode
@@ -93,7 +93,7 @@ def countBarcodes(variant_barcode_list, fastq_file_path):
             if line.startswith('@SOLEXA6'):
                 fastq_file_read_count = fastq_file_read_count + 1
                 barcode = fastq_file.readline().strip()[14:23]
-                logger.debug(barcode)
+                # logger.debug(barcode)
                 if not len(barcode) == 9:
                     raise Exception('The extracted barcode is not 9 bases long. Check code')
                 if barcode in variant_barcode_list:
