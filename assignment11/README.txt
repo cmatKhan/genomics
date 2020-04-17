@@ -1,6 +1,6 @@
 Part 1:
 {Command line argument you used for filter_variants.py}
-- filter_variants.py -i variant_to_barcode.txt
+- ./filter_variants.py -i data/variant_to_barcode.txt
 
 Question 1:
 {How many variants are not well represented by barcodes?}
@@ -12,14 +12,15 @@ Question 2:
 
 Question 3:
 {Command line argument you used for count_barcodes.py}
- - count_barcodes.py -b filtered_variant_to_barcode.tsv -f <cDNA.fq or pDNA.fq>
+ - ./count_barcodes.py -b filtered_variant_to_barcode.tsv -f data/pDNA.fq
+   ./count_barcodes.py -b filtered_variant_to_barcode.tsv -f data/cDNA.fq
 
 {How many reads in cDNA.fq are left after filtering?}
 - The number of reads left after filtering is: 52073
 
 Part 2:
 {Command line argument you used for analyze_MPRA.py}
-- analyze_mpra.py -c cDNA_count.tsv -p pDNA_count.tsv -f filtered_variant_to_barcode.tsv
+- ./analyze_mpra.py -c cDNA_count.tsv -p pDNA_count.tsv -f filtered_variant_to_barcode.tsv -e data/variant_eQTL_results.txt
 Question 4:
   4.1 -                        Count_by_eQTL
 Significant_eQTL_gene
