@@ -126,7 +126,7 @@ def checkCombinations(dna_string, aa_string, melting_temp_threshold, output_file
             # do not print DNA strings if the melting temp threshold is not satisfied
             if melting_temp_threshold - .5 <= melting_temp <= melting_temp_threshold + .5:
                 with open(output_file, 'a') as file:
-                    file.write('%s\t%.2f\t' %(dna_string, melting_temp))
+                    file.write('%s\t%.2f\n' %(dna_string, melting_temp))
 
     # if the base case has not been reached...
     elif len(aa_string) != 0:
