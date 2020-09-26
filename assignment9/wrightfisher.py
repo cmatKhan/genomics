@@ -214,7 +214,7 @@ class Individual:
 
 class DiploidIndividual(Individual):
     """
-    A child of Individual.
+    A child of Individual
     Attributes:
         _possible_genotypes: set to {'homozygous_a': [0,0], 'homozygous_b': [1,1], 'heterzygous': self.heteroGenotype()}
         genotype: set based on parameter passed to constructor
